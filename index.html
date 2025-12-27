@@ -8,6 +8,397 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* ========== ACCOUNT TYPE SELECTION MODAL ========== */
+        .account-type-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 99999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .account-type-content {
+            background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
+            border-radius: 25px;
+            padding: 35px 30px;
+            max-width: 420px;
+            width: 100%;
+            color: white;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.7);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .account-type-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+        }
+        
+        .account-type-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+        }
+        
+        .account-type-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .account-type-subtitle {
+            color: var(--text-tertiary);
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .account-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .account-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 22px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .account-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        
+        .account-option.selected {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1));
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+        
+        .account-option-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin: 0 auto 15px;
+        }
+        
+        .account-option.selected .account-option-icon {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+        }
+        
+        .account-option-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .account-option-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .account-option-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--win-color);
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .account-type-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .confirm-account-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            border: none;
+            color: white;
+            font-weight: 700;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+        
+        .confirm-account-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+        }
+        
+        /* ========== ADMIN PANEL MODAL ========== */
+        .admin-panel-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 99999999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .admin-panel-modal.active {
+            display: flex;
+        }
+        
+        .admin-panel-content {
+            background: linear-gradient(135deg, rgba(25, 25, 35, 0.98) 0%, rgba(15, 15, 25, 0.98) 100%);
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            color: white;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.7);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        
+        .admin-panel-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .admin-panel-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        
+        .admin-panel-subtitle {
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+        
+        .admin-close-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .admin-close-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(90deg);
+        }
+        
+        .admin-section {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .admin-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .admin-section-title i {
+            color: var(--accent-color);
+        }
+        
+        .market-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .market-control-btn {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .market-control-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+        
+        .market-control-btn.update {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        
+        .market-control-btn.update:hover {
+            background: rgba(16, 185, 129, 0.15);
+        }
+        
+        .market-control-btn.close {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        .market-control-btn.close:hover {
+            background: rgba(239, 68, 68, 0.15);
+        }
+        
+        .market-control-btn.post {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+            grid-column: 1 / -1;
+        }
+        
+        .market-control-btn.post:hover {
+            background: rgba(59, 130, 246, 0.15);
+        }
+        
+        .market-control-btn i {
+            font-size: 20px;
+        }
+        
+        .market-status {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        
+        .market-status-title {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .market-status-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--win-color);
+        }
+        
+        .market-status-value.closed {
+            color: var(--loss-color);
+        }
+        
+        .admin-input-group {
+            margin-bottom: 18px;
+        }
+        
+        .admin-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 600;
+        }
+        
+        .admin-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .admin-input:focus {
+            border-color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .admin-warning {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
         /* ========== TUTORIAL MODAL STYLES ========== */
         .tutorial-modal {
             position: fixed;
@@ -453,7 +844,7 @@
             padding: 18px;
             border-radius: 15px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255,255, 0.1);
         }
         
         .recommendation-label {
@@ -491,6 +882,7 @@
             --text-primary: #ffffff;
             --text-secondary: #d1d5db;
             --text-tertiary: #9ca3af;
+            --cent-color: #f59e0b;
         }
         
         * {
@@ -533,6 +925,53 @@
             position: relative; 
             z-index: 10; 
             padding: 10px 0;
+        }
+        
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .account-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--cent-color);
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            margin-bottom: 5px;
+            max-width: fit-content;
+        }
+        
+        .account-badge.usd {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--win-color);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        
+        .admin-btn {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .admin-btn:hover {
+            background: rgba(245, 158, 11, 0.2);
+            transform: translateY(-1px);
         }
         
         .header-text {
@@ -623,6 +1062,11 @@
         
         .equity-card.mixed {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.3);
+        }
+        
+        .equity-card.cent {
+            background: linear-gradient(135deg, var(--cent-color) 0%, #d97706 100%) !important;
             box-shadow: 0 15px 35px rgba(245, 158, 11, 0.3);
         }
         
@@ -867,6 +1311,46 @@
             align-items: center; 
             padding: 14px 0; 
             border-bottom: 1px solid rgba(255,255,255,0.05); 
+        }
+        
+        .wd-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .wd-action-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            color: var(--wd-color);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .wd-action-btn:hover {
+            background: rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .wd-action-btn.add {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: var(--win-color);
+        }
+        
+        .wd-action-btn.add:hover {
+            background: rgba(16, 185, 129, 0.15);
         }
         
         .chart-container { 
@@ -1156,6 +1640,11 @@
             box-shadow: 0 0 6px #10b981;
             animation: pulse 2s infinite;
         }
+        
+        .market-closed {
+            background: #ef4444 !important;
+            box-shadow: 0 0 6px #ef4444 !important;
+        }
 
         @keyframes pulse {
             0% { opacity: 1; }
@@ -1201,11 +1690,29 @@
             border: 1px solid rgba(255,255,255,0.08);
             scroll-snap-align: start;
             transition: all 0.3s;
+            position: relative;
         }
 
         .price-card:hover {
             background: rgba(255,255,255,0.06);
             transform: translateY(-2px);
+        }
+        
+        .price-card.market-closed {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        .market-closed-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--loss-color);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 700;
         }
 
         .price-card small {
@@ -1215,11 +1722,19 @@
             display: block;
             margin-bottom: 6px;
         }
+        
+        .price-card.market-closed small {
+            color: var(--loss-color);
+        }
 
         .price-card strong {
             font-size: 18px;
             font-weight: 700;
             display: block;
+        }
+        
+        .price-card.market-closed strong {
+            color: var(--loss-color);
         }
 
         .up { color: var(--win-color); }
@@ -2047,9 +2562,165 @@
             margin-bottom: 8px;
             padding-left: 5px;
         }
+        
+        /* Cent Account Specific Styles */
+        .cent-mode .equity-amount::before {
+            content: '¢ ';
+        }
+        
+        .cent-mode .lot-result-value::after {
+            content: ' USC';
+        }
+        
+        .cent-mode .lot-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
+    <!-- Account Type Selection Modal -->
+    <div class="account-type-modal" id="accountTypeModal">
+        <div class="account-type-content">
+            <div class="account-type-icon">
+                <i class="fas fa-wallet"></i>
+            </div>
+            <h1 class="account-type-title">Pilih Tipe Akun</h1>
+            <p class="account-type-subtitle">Pilih tipe akun trading Anda untuk kalkulasi lot yang akurat</p>
+            
+            <div class="account-options">
+                <div class="account-option" onclick="selectAccountType('usd')" id="usdAccountOption">
+                    <div class="account-option-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="account-option-name">USD Account</div>
+                    <div class="account-option-desc">
+                        Standard account dengan perhitungan lot normal.
+                        Balance dalam USD, lot size normal (0.01, 0.1, 1.0).
+                    </div>
+                    <span class="account-option-badge">Rekomendasi</span>
+                </div>
+                
+                <div class="account-option" onclick="selectAccountType('cent')" id="centAccountOption">
+                    <div class="account-option-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="account-option-name">CENT Account</div>
+                    <div class="account-option-desc">
+                        Cent account dengan perhitungan khusus.
+                        Balance dalam USC (USD Cent), lot size diperkecil (0.0001, 0.001, 0.01).
+                    </div>
+                </div>
+            </div>
+            
+            <div class="account-type-warning">
+                <i class="fas fa-exclamation-triangle"></i> 
+                <strong>Perhatian:</strong> Pilihan ini akan mempengaruhi perhitungan lot calculator. Anda bisa mengubahnya nanti di settings.
+            </div>
+            
+            <button class="confirm-account-btn" onclick="confirmAccountType()">
+                <i class="fas fa-check-circle"></i> Konfirmasi Pilihan
+            </button>
+        </div>
+    </div>
+    
+    <!-- Admin Panel Modal -->
+    <div class="admin-panel-modal" id="adminPanelModal">
+        <div class="admin-panel-content">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title">Admin Panel</h2>
+                <p class="admin-panel-subtitle">Control Panel untuk Market Price & Settings</p>
+                <button class="admin-close-btn" onclick="closeAdminPanel()">✕</button>
+            </div>
+            
+            <div class="admin-section">
+                <div class="admin-section-title">
+                    <i class="fas fa-sliders-h"></i> Market Controls
+                </div>
+                
+                <div class="market-controls">
+                    <button class="market-control-btn update" onclick="updateMarketPrices()">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Update Prices</span>
+                    </button>
+                    
+                    <button class="market-control-btn close" onclick="toggleMarketClose()">
+                        <i class="fas fa-power-off"></i>
+                        <span>Market Close</span>
+                    </button>
+                    
+                    <button class="market-control-btn post" onclick="postMT5Prices()">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>POST MT5 Prices</span>
+                    </button>
+                </div>
+                
+                <div class="market-status">
+                    <div class="market-status-title">Market Status:</div>
+                    <div class="market-status-value" id="marketStatusDisplay">OPEN</div>
+                </div>
+            </div>
+            
+            <div class="admin-section">
+                <div class="admin-section-title">
+                    <i class="fas fa-edit"></i> Manual Price Settings
+                </div>
+                
+                <div class="admin-input-group">
+                    <label class="admin-label">XAU/USD Price</label>
+                    <input type="number" id="adminXauPrice" class="admin-input" placeholder="4533.99" step="0.01">
+                </div>
+                
+                <div class="admin-input-group">
+                    <label class="admin-label">BTC/USD Price</label>
+                    <input type="number" id="adminBtcPrice" class="admin-input" placeholder="87532.99" step="0.01">
+                </div>
+                
+                <div class="admin-input-group">
+                    <label class="admin-label">US30 Price</label>
+                    <input type="number" id="adminUs30Price" class="admin-input" placeholder="39500.50" step="0.01">
+                </div>
+                
+                <div class="admin-input-group">
+                    <label class="admin-label">NAS100 Price</label>
+                    <input type="number" id="adminNas100Price" class="admin-input" placeholder="25644.39" step="0.01">
+                </div>
+                
+                <button class="btn-primary" onclick="saveManualPrices()" style="margin-top: 10px;">
+                    <i class="fas fa-save"></i> Save Manual Prices
+                </button>
+            </div>
+            
+            <div class="admin-section">
+                <div class="admin-section-title">
+                    <i class="fas fa-cogs"></i> POST Settings
+                </div>
+                
+                <div class="admin-input-group">
+                    <label class="admin-label">POST URL (MT5/MQL5)</label>
+                    <input type="text" id="postUrl" class="admin-input" placeholder="https://your-vps.com/api/prices" value="">
+                </div>
+                
+                <div class="admin-input-group">
+                    <label class="admin-label">API Key</label>
+                    <input type="password" id="apiKey" class="admin-input" placeholder="Your API Key">
+                </div>
+                
+                <div class="admin-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Security Note:</strong> Simpan URL dan API key dengan aman. Data hanya disimpan di browser Anda.
+                </div>
+            </div>
+            
+            <button class="btn-primary" onclick="saveAdminSettings()" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                <i class="fas fa-save"></i> Save All Settings
+            </button>
+        </div>
+    </div>
+    
     <!-- Tutorial Modal -->
     <div class="tutorial-modal" id="tutorialModal">
         <div class="tutorial-content">
@@ -2184,10 +2855,10 @@
             </div>
             
             <div class="lot-form-group">
-                <label class="lot-label">Account Balance ($)</label>
+                <label class="lot-label">Account Balance (<span id="balance-unit">$</span>)</label>
                 <div class="lot-input-group">
                     <input type="number" id="calc-balance" class="lot-input" placeholder="5000" min="1" step="0.01">
-                    <span class="lot-input-unit">USD</span>
+                    <span class="lot-input-unit" id="balance-unit-label">USD</span>
                 </div>
                 
                 <label class="lot-label">Risk per Trade (%)</label>
@@ -2242,7 +2913,7 @@
                 </div>
             </div>
             
-            <p class="lot-warning">
+            <p class="lot-warning" id="lot-warning-text">
                 <i class="fas fa-exclamation-triangle"></i> This is a recommendation. Always adjust based on your risk tolerance and market conditions.
             </p>
         </div>
@@ -2274,6 +2945,16 @@
     <div class="overlay"></div>
     
     <header>
+        <div class="header-left">
+            <div id="account-badge" class="account-badge usd" style="display: none;">
+                <i class="fas fa-wallet"></i>
+                <span>USD ACCOUNT</span>
+            </div>
+            <button class="admin-btn" onclick="openAdminLogin()" id="adminBtn" style="display: none;">
+                <i class="fas fa-user-shield"></i>
+                <span>ADMIN</span>
+            </button>
+        </div>
         <div class="header-text">
             <small>Trading Performance</small>
             <h2 id="display-name">Trader Kece</h2>
@@ -2287,7 +2968,7 @@
             <div class="equity-edit" onclick="editEquity()">✏️</div>
             <div class="equity-content">
                 <div class="equity-label">Current Equity (Net)</div>
-                <div class="equity-amount">$ <span id="home-balance">0</span></div>
+                <div class="equity-amount"><span id="currency-symbol">$</span> <span id="home-balance">0</span></div>
                 <div id="floating-balance" style="font-size: 13px; margin-top: 8px; opacity: 0.9; display: none;"></div>
                 <div class="equity-info">
                     <div class="equity-growth" id="home-growth">Growth: 0%</div>
@@ -2323,36 +3004,36 @@
         <!-- Live Market Section -->
         <div class="live-market-section">
             <div class="live-market-header">
-                <span class="live-dot"></span>
-                <span>Live Market - TradingView</span>
+                <span class="live-dot" id="marketStatusDot"></span>
+                <span id="marketStatusText">Live Market - TradingView</span>
                 <button class="refresh-btn" onclick="refreshMarketPrices()">
                     <i class="fas fa-sync-alt"></i> Refresh
                 </button>
             </div>
 
             <div class="live-price-scroll">
-                <div class="price-card">
+                <div class="price-card" id="xau-card">
                     <small>XAUUSD</small>
                     <strong class="up" id="xau-price">
                         <span class="spinner"></span>
                         <span class="price-loading">Loading...</span>
                     </strong> 
                 </div>
-                <div class="price-card">
+                <div class="price-card" id="btc-card">
                     <small>BTCUSD</small>
                     <strong class="up" id="btc-price">
                         <span class="spinner"></span>
                         <span class="price-loading">Loading...</span>
                     </strong> 
                 </div>
-                <div class="price-card">
+                <div class="price-card" id="us30-card">
                     <small>US30 (Dow)</small>
                     <strong class="up" id="us30-price">
                         <span class="spinner"></span>
                         <span class="price-loading">Loading...</span>
                     </strong>
                 </div>
-                <div class="price-card">
+                <div class="price-card" id="nas100-card">
                     <small>NAS100</small>
                     <strong class="up" id="nas100-price">
                         <span class="spinner"></span>
@@ -2432,7 +3113,7 @@
             <div id="current-pnl-container" style="display: none;">
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                     <div style="flex: 1;">
-                        <small style="color: var(--text-tertiary);">Current Floating P&L ($)</small>
+                        <small style="color: var(--text-tertiary);">Current Floating P&L (<span id="pnl-currency">$</span>)</small>
                         <input type="number" id="current-pnl" class="current-pnl-input" placeholder="Contoh: -150 (negatif untuk floating)" step="0.01">
                     </div>
                     <button onclick="updateCurrentPnl()" class="pnl-update-btn" style="height: 48px;">
@@ -2467,6 +3148,19 @@
         </div>
         <h4>Trade History</h4>
         <div id="trade-list"></div>
+        
+        <!-- Tambahan: Menu Withdrawal di bawah tampilan withdrawal -->
+        <div class="wd-actions">
+            <button class="wd-action-btn add" onclick="addWithdrawal()">
+                <i class="fas fa-plus"></i> Add Withdrawal
+            </button>
+            <button class="wd-action-btn" onclick="showAllWithdrawals()">
+                <i class="fas fa-history"></i> View All
+            </button>
+            <button class="wd-action-btn" onclick="exportWithdrawals()">
+                <i class="fas fa-download"></i> Export
+            </button>
+        </div>
     </div>
     
     <div id="journal" class="section">
@@ -2516,6 +3210,23 @@
         <div class="card">
             <input type="text" id="input-name" placeholder="Nama">
             <input type="number" id="input-capital" placeholder="Modal Awal ($)">
+            
+            <!-- Account Type Switch -->
+            <div style="margin-top: 20px;">
+                <label class="label-small"><i class="fas fa-exchange-alt"></i> Switch Account Type</label>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                    <div>
+                        <div style="font-weight: 600; font-size: 14px;" id="current-account-type-display">USD Account</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary);">Current account type</div>
+                    </div>
+                    <button onclick="switchAccountType()" class="btn-primary" style="padding: 8px 16px; font-size: 13px; width: auto;">
+                        <i class="fas fa-sync-alt"></i> Switch
+                    </button>
+                </div>
+                <p style="font-size: 11px; color: var(--text-tertiary); margin-top: 8px;">
+                    <i class="fas fa-info-circle"></i> Switching account type akan mengubah perhitungan lot calculator.
+                </p>
+            </div>
             
             <!-- Lot Calculator Settings -->
             <div style="margin-top: 20px;">
@@ -2663,7 +3374,7 @@
             </div>
             
             <div id="edit-current-pnl-container" style="margin-bottom: 12px;">
-                <small style="color: var(--text-tertiary);">Current Floating P&L ($):</small>
+                <small style="color: var(--text-tertiary);">Current Floating P&L (<span id="edit-pnl-currency">$</span>):</small>
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <input type="number" id="edit-current-pnl" class="current-pnl-input" placeholder="Contoh: -150" step="0.01" style="flex: 1;">
                     <button onclick="updateCurrentPnlInEdit()" class="pnl-update-btn" style="height: 48px;">
@@ -2809,7 +3520,14 @@
             profilePic: "https://ui-avatars.com/api/?name=User&background=6366f1&color=fff",
             tutorialCompleted: false,
             defaultRisk: 2,
-            defaultSL: 30
+            defaultSL: 30,
+            accountType: 'usd', // 'usd' or 'cent'
+            adminSettings: {
+                marketClosed: false,
+                postUrl: '',
+                apiKey: '',
+                manualPrices: {}
+            }
         };
         let myChart;
         let aiConversation = [];
@@ -2826,17 +3544,36 @@
         // Tutorial State
         let tutorialStep = 1;
         const totalTutorialSteps = 5;
+        
+        // Admin State
+        let isAdmin = false;
+        let selectedAccountType = 'usd';
 
         window.onload = () => {
+            // Initialize account type
+            selectedAccountType = config.accountType || 'usd';
+            
+            // Check if account type selection is needed
+            const hasSelectedAccount = localStorage.getItem('accountTypeSelected');
+            
             // Check if tutorial should be shown
             const hasData = trades.length > 0 || journals.length > 0 || withdrawals.length > 0;
             const showTutorial = !config.tutorialCompleted && !hasData;
             
-            if (showTutorial) {
+            if (!hasSelectedAccount && !hasData) {
+                // Show account type selection first
+                document.getElementById('accountTypeModal').style.display = 'flex';
+                document.getElementById('tutorialModal').style.display = 'none';
+            } else if (showTutorial) {
                 document.getElementById('tutorialModal').style.display = 'flex';
+                document.getElementById('accountTypeModal').style.display = 'none';
             } else {
                 document.getElementById('tutorialModal').style.display = 'none';
+                document.getElementById('accountTypeModal').style.display = 'none';
             }
+            
+            // Apply account type
+            applyAccountType();
             
             // Request notification permission
             if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
@@ -2949,6 +3686,20 @@
                 }
             });
             
+            // Close account type modal saat klik di luar
+            document.getElementById('accountTypeModal').addEventListener('click', (e) => {
+                if (e.target.id === 'accountTypeModal') {
+                    // Jangan biarkan tutup tanpa pilihan
+                }
+            });
+            
+            // Close admin modal saat klik di luar
+            document.getElementById('adminPanelModal').addEventListener('click', (e) => {
+                if (e.target.id === 'adminPanelModal') {
+                    closeAdminPanel();
+                }
+            });
+            
             // Close modal dengan ESC key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
@@ -2957,9 +3708,320 @@
                     closeLotCalculator();
                     document.getElementById('settingsModal').classList.remove('active');
                     closeRecommendation();
+                    closeAdminPanel();
                 }
             });
+            
+            // Setup admin button
+            setupAdminButton();
+            
+            // Auto update market prices every hour
+            setInterval(refreshMarketPrices, 60 * 60 * 1000); // 1 jam
         };
+        
+        // ========== ACCOUNT TYPE FUNCTIONS ==========
+        function selectAccountType(type) {
+            selectedAccountType = type;
+            
+            // Update UI
+            document.querySelectorAll('.account-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            if (type === 'usd') {
+                document.getElementById('usdAccountOption').classList.add('selected');
+            } else {
+                document.getElementById('centAccountOption').classList.add('selected');
+            }
+        }
+        
+        function confirmAccountType() {
+            config.accountType = selectedAccountType;
+            localStorage.setItem('traderConfig', JSON.stringify(config));
+            localStorage.setItem('accountTypeSelected', 'true');
+            
+            document.getElementById('accountTypeModal').style.display = 'none';
+            
+            // Apply account type changes
+            applyAccountType();
+            
+            // Show tutorial if needed
+            const hasData = trades.length > 0 || journals.length > 0 || withdrawals.length > 0;
+            const showTutorial = !config.tutorialCompleted && !hasData;
+            
+            if (showTutorial) {
+                setTimeout(() => {
+                    document.getElementById('tutorialModal').style.display = 'flex';
+                }, 500);
+            }
+        }
+        
+        function applyAccountType() {
+            const isCentAccount = config.accountType === 'cent';
+            
+            // Update body class
+            if (isCentAccount) {
+                document.body.classList.add('cent-mode');
+            } else {
+                document.body.classList.remove('cent-mode');
+            }
+            
+            // Update currency symbols
+            const currencySymbol = isCentAccount ? '¢' : '$';
+            const currencyLabel = isCentAccount ? 'USC' : 'USD';
+            
+            document.getElementById('currency-symbol').textContent = currencySymbol;
+            document.getElementById('balance-unit').textContent = currencySymbol;
+            document.getElementById('balance-unit-label').textContent = currencyLabel;
+            document.getElementById('pnl-currency').textContent = currencySymbol;
+            document.getElementById('edit-pnl-currency').textContent = currencySymbol;
+            
+            // Update equity card
+            const equityCard = document.getElementById('equityCard');
+            if (isCentAccount) {
+                equityCard.classList.add('cent');
+            } else {
+                equityCard.classList.remove('cent');
+            }
+            
+            // Update account badge
+            const accountBadge = document.getElementById('account-badge');
+            if (isCentAccount) {
+                accountBadge.innerHTML = '<i class="fas fa-coins"></i><span>CENT ACCOUNT</span>';
+                accountBadge.classList.remove('usd');
+                accountBadge.classList.add('cent');
+            } else {
+                accountBadge.innerHTML = '<i class="fas fa-dollar-sign"></i><span>USD ACCOUNT</span>';
+                accountBadge.classList.remove('cent');
+                accountBadge.classList.add('usd');
+            }
+            
+            // Update display
+            const accountTypeDisplay = document.getElementById('current-account-type-display');
+            if (isCentAccount) {
+                accountTypeDisplay.textContent = 'CENT Account (USC)';
+            } else {
+                accountTypeDisplay.textContent = 'USD Account';
+            }
+            
+            // Show badge
+            accountBadge.style.display = 'flex';
+            
+            // Update UI
+            updateUI();
+        }
+        
+        function switchAccountType() {
+            const newType = config.accountType === 'usd' ? 'cent' : 'usd';
+            const confirmMsg = newType === 'cent' 
+                ? 'Switch ke CENT Account? Perhitungan lot akan berubah (1 USD = 100 USC).'
+                : 'Switch ke USD Account? Perhitungan lot akan kembali normal.';
+            
+            if (confirm(confirmMsg)) {
+                config.accountType = newType;
+                localStorage.setItem('traderConfig', JSON.stringify(config));
+                applyAccountType();
+                alert(`Account type switched to ${newType.toUpperCase()}`);
+            }
+        }
+        
+        // ========== ADMIN PANEL FUNCTIONS ==========
+        function setupAdminButton() {
+            // Check if admin credentials are stored
+            const adminCredentials = localStorage.getItem('adminCredentials');
+            if (adminCredentials) {
+                document.getElementById('adminBtn').style.display = 'inline-flex';
+            }
+        }
+        
+        function openAdminLogin() {
+            const username = prompt("Admin Username:");
+            const password = prompt("Admin Password:");
+            
+            if (username === 'y' && password === '001') {
+                isAdmin = true;
+                localStorage.setItem('adminCredentials', btoa('y:001'));
+                document.getElementById('adminPanelModal').classList.add('active');
+                loadAdminSettings();
+            } else {
+                alert("Invalid admin credentials!");
+            }
+        }
+        
+        function closeAdminPanel() {
+            document.getElementById('adminPanelModal').classList.remove('active');
+            isAdmin = false;
+        }
+        
+        function loadAdminSettings() {
+            const adminSettings = config.adminSettings || {};
+            
+            // Load market status
+            const marketClosed = adminSettings.marketClosed || false;
+            document.getElementById('marketStatusDisplay').textContent = marketClosed ? 'CLOSED' : 'OPEN';
+            document.getElementById('marketStatusDisplay').classList.toggle('closed', marketClosed);
+            
+            // Load manual prices
+            const manualPrices = adminSettings.manualPrices || {};
+            document.getElementById('adminXauPrice').value = manualPrices.xau || '';
+            document.getElementById('adminBtcPrice').value = manualPrices.btc || '';
+            document.getElementById('adminUs30Price').value = manualPrices.us30 || '';
+            document.getElementById('adminNas100Price').value = manualPrices.nas100 || '';
+            
+            // Load POST settings
+            document.getElementById('postUrl').value = adminSettings.postUrl || '';
+            document.getElementById('apiKey').value = adminSettings.apiKey || '';
+        }
+        
+        function saveAdminSettings() {
+            const adminSettings = config.adminSettings || {};
+            
+            // Save manual prices
+            adminSettings.manualPrices = {
+                xau: document.getElementById('adminXauPrice').value,
+                btc: document.getElementById('adminBtcPrice').value,
+                us30: document.getElementById('adminUs30Price').value,
+                nas100: document.getElementById('adminNas100Price').value
+            };
+            
+            // Save POST settings
+            adminSettings.postUrl = document.getElementById('postUrl').value;
+            adminSettings.apiKey = document.getElementById('apiKey').value;
+            
+            config.adminSettings = adminSettings;
+            localStorage.setItem('traderConfig', JSON.stringify(config));
+            
+            alert("Admin settings saved!");
+        }
+        
+        function updateMarketPrices() {
+            const manualPrices = config.adminSettings?.manualPrices;
+            
+            if (manualPrices && Object.keys(manualPrices).length > 0) {
+                // Use manual prices
+                if (manualPrices.xau) {
+                    updatePriceDisplay('xau-price', parseFloat(manualPrices.xau));
+                }
+                if (manualPrices.btc) {
+                    updatePriceDisplay('btc-price', parseFloat(manualPrices.btc));
+                }
+                if (manualPrices.us30) {
+                    updatePriceDisplay('us30-price', parseFloat(manualPrices.us30));
+                }
+                if (manualPrices.nas100) {
+                    updatePriceDisplay('nas100-price', parseFloat(manualPrices.nas100));
+                }
+                
+                alert("Market prices updated from manual settings!");
+            } else {
+                // Refresh from API
+                refreshMarketPrices();
+            }
+        }
+        
+        function toggleMarketClose() {
+            const adminSettings = config.adminSettings || {};
+            adminSettings.marketClosed = !adminSettings.marketClosed;
+            config.adminSettings = adminSettings;
+            localStorage.setItem('traderConfig', JSON.stringify(config));
+            
+            const marketClosed = adminSettings.marketClosed;
+            document.getElementById('marketStatusDisplay').textContent = marketClosed ? 'CLOSED' : 'OPEN';
+            document.getElementById('marketStatusDisplay').classList.toggle('closed', marketClosed);
+            
+            // Update market display
+            updateMarketStatusDisplay();
+            
+            alert(`Market ${marketClosed ? 'CLOSED' : 'OPENED'}!`);
+        }
+        
+        function postMT5Prices() {
+            const postUrl = document.getElementById('postUrl').value;
+            const apiKey = document.getElementById('apiKey').value;
+            
+            if (!postUrl) {
+                alert("Please set POST URL first!");
+                return;
+            }
+            
+            // Prepare price data
+            const priceData = {
+                xau: parseFloat(document.getElementById('xau-price').innerText.replace(/[^0-9.-]+/g, "")) || 0,
+                btc: parseFloat(document.getElementById('btc-price').innerText.replace(/[^0-9.-]+/g, "")) || 0,
+                us30: parseFloat(document.getElementById('us30-price').innerText.replace(/[^0-9.-]+/g, "")) || 0,
+                nas100: parseFloat(document.getElementById('nas100-price').innerText.replace(/[^0-9.-]+/g, "")) || 0,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Show sending status
+            alert(`Sending prices to MT5...\n\nURL: ${postUrl}\n\nThis is a demo. In production, this would make an actual POST request.`);
+            
+            // Simulate POST request
+            setTimeout(() => {
+                alert("Prices sent to MT5 successfully! (Demo mode)");
+            }, 1500);
+        }
+        
+        function saveManualPrices() {
+            const xauPrice = document.getElementById('adminXauPrice').value;
+            const btcPrice = document.getElementById('adminBtcPrice').value;
+            const us30Price = document.getElementById('adminUs30Price').value;
+            const nas100Price = document.getElementById('adminNas100Price').value;
+            
+            if (!xauPrice || !btcPrice || !us30Price || !nas100Price) {
+                alert("Please fill all price fields!");
+                return;
+            }
+            
+            const adminSettings = config.adminSettings || {};
+            adminSettings.manualPrices = {
+                xau: xauPrice,
+                btc: btcPrice,
+                us30: us30Price,
+                nas100: nas100Price
+            };
+            
+            config.adminSettings = adminSettings;
+            localStorage.setItem('traderConfig', JSON.stringify(config));
+            
+            alert("Manual prices saved! Click 'Update Prices' to apply.");
+        }
+        
+        function updateMarketStatusDisplay() {
+            const marketClosed = config.adminSettings?.marketClosed || false;
+            const marketStatusDot = document.getElementById('marketStatusDot');
+            const marketStatusText = document.getElementById('marketStatusText');
+            
+            if (marketClosed) {
+                marketStatusDot.classList.add('market-closed');
+                marketStatusText.textContent = 'Market CLOSED - TradingView';
+                
+                // Update price cards
+                const priceCards = document.querySelectorAll('.price-card');
+                priceCards.forEach(card => {
+                    if (!card.id.includes('btc')) { // BTC tetap normal
+                        card.classList.add('market-closed');
+                        const badge = document.createElement('span');
+                        badge.className = 'market-closed-badge';
+                        badge.textContent = 'CLOSED';
+                        card.appendChild(badge);
+                    }
+                });
+            } else {
+                marketStatusDot.classList.remove('market-closed');
+                marketStatusText.textContent = 'Live Market - TradingView';
+                
+                // Remove market closed styling
+                const priceCards = document.querySelectorAll('.price-card');
+                priceCards.forEach(card => {
+                    card.classList.remove('market-closed');
+                    const badge = card.querySelector('.market-closed-badge');
+                    if (badge) {
+                        badge.remove();
+                    }
+                });
+            }
+        }
 
         // ========== TUTORIAL FUNCTIONS ==========
         function nextTutorialStep() {
@@ -3025,6 +4087,22 @@
             document.getElementById('calc-risk').value = config.defaultRisk || 2;
             document.getElementById('calc-sl').value = config.defaultSL || 30;
             
+            // Update warning text based on account type
+            const warningText = document.getElementById('lot-warning-text');
+            if (config.accountType === 'cent') {
+                warningText.innerHTML = `<i class="fas fa-exclamation-triangle"></i> <strong>CENT Account Mode:</strong> Lot size dikonversi ke USC (1 USD = 100 USC).`;
+                warningText.style.background = 'rgba(245, 158, 11, 0.1)';
+                warningText.style.border = '1px solid rgba(245, 158, 11, 0.3)';
+                warningText.style.padding = '10px';
+                warningText.style.borderRadius = '10px';
+            } else {
+                warningText.innerHTML = `<i class="fas fa-exclamation-triangle"></i> This is a recommendation. Always adjust based on your risk tolerance and market conditions.`;
+                warningText.style.background = '';
+                warningText.style.border = '';
+                warningText.style.padding = '';
+                warningText.style.borderRadius = '';
+            }
+            
             // Hide previous results
             document.getElementById('lotResultContainer').style.display = 'none';
         }
@@ -3049,8 +4127,12 @@
                 return;
             }
             
+            // Adjust balance for CENT account
+            const isCentAccount = config.accountType === 'cent';
+            const adjustedBalance = isCentAccount ? balance / 100 : balance;
+            
             // Calculate risk amount
-            const riskAmount = (balance * riskPercent) / 100;
+            const riskAmount = (adjustedBalance * riskPercent) / 100;
             
             // Calculate optimal lot based on instrument type
             let pipValuePerLot = 10; // Default for forex majors
@@ -3074,14 +4156,22 @@
             }
             
             // Calculate optimal lot size
-            const optimalLot = riskAmount / (stopLoss * pipValuePerLot);
+            let optimalLot = riskAmount / (stopLoss * pipValuePerLot);
             
-            // Round to nearest standard lot size (0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, etc.)
+            // Adjust for CENT account
+            if (isCentAccount) {
+                optimalLot = optimalLot / 100; // Divide by 100 for CENT account
+            }
+            
+            // Round to nearest standard lot size
             let roundedLot = Math.max(0.01, Math.round(optimalLot * 100) / 100);
             
             // Ensure it's a standard lot size
-            const standardLots = [0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10];
-            let finalLot = 0.01;
+            const standardLots = isCentAccount 
+                ? [0.0001, 0.0002, 0.0003, 0.0005, 0.001, 0.002, 0.003, 0.005, 0.01, 0.02, 0.03, 0.05, 0.1]
+                : [0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10];
+            
+            let finalLot = isCentAccount ? 0.0001 : 0.01;
             
             for (let i = 0; i < standardLots.length; i++) {
                 if (roundedLot >= standardLots[i]) {
@@ -3094,11 +4184,11 @@
             // Calculate maximal layering based on balance and risk
             let maxLayering = 3; // Default
             
-            if (balance < 1000) {
+            if (adjustedBalance < 1000) {
                 maxLayering = 2;
-            } else if (balance >= 1000 && balance < 5000) {
+            } else if (adjustedBalance >= 1000 && adjustedBalance < 5000) {
                 maxLayering = 3;
-            } else if (balance >= 5000 && balance < 20000) {
+            } else if (adjustedBalance >= 5000 && adjustedBalance < 20000) {
                 maxLayering = 4;
             } else {
                 maxLayering = 5;
@@ -3110,21 +4200,28 @@
             }
             
             // Update UI
-            document.getElementById('result-lot').textContent = finalLot.toFixed(2);
-            document.getElementById('result-risk').textContent = `$${riskAmount.toFixed(2)}`;
+            document.getElementById('result-lot').textContent = finalLot.toFixed(4);
+            const riskAmountDisplay = isCentAccount ? riskAmount * 100 : riskAmount;
+            document.getElementById('result-risk').textContent = `${isCentAccount ? '¢' : '$'}${riskAmountDisplay.toFixed(2)}`;
             document.getElementById('result-layering').textContent = maxLayering;
             
             // Generate recommendation text
             let recommendationText = '';
-            if (finalLot <= 0.05) {
-                recommendationText = `Balance $${balance.toLocaleString()} dengan risk ${riskPercent}% per trade. Start dengan ${finalLot.toFixed(2)} lot untuk risk management yang aman.`;
-            } else if (finalLot <= 0.2) {
-                recommendationText = `Balance $${balance.toLocaleString()} cukup solid! ${finalLot.toFixed(2)} lot size optimal dengan max ${maxLayering} posisi bersamaan.`;
+            const balanceDisplay = isCentAccount ? balance + ' USC' : '$' + balance.toLocaleString();
+            
+            if (finalLot <= (isCentAccount ? 0.0005 : 0.05)) {
+                recommendationText = `Balance ${balanceDisplay} dengan risk ${riskPercent}% per trade. Start dengan ${finalLot.toFixed(4)} lot untuk risk management yang aman.`;
+            } else if (finalLot <= (isCentAccount ? 0.002 : 0.2)) {
+                recommendationText = `Balance ${balanceDisplay} cukup solid! ${finalLot.toFixed(4)} lot size optimal dengan max ${maxLayering} posisi bersamaan.`;
             } else {
-                recommendationText = `Balance $${balance.toLocaleString()} besar! ${finalLot.toFixed(2)} lot size bisa profitable dengan disiplin stop loss.`;
+                recommendationText = `Balance ${balanceDisplay} besar! ${finalLot.toFixed(4)} lot size bisa profitable dengan disiplin stop loss.`;
             }
             
             recommendationText += ` Max layering: ${maxLayering} posisi untuk manage risk.`;
+            
+            if (isCentAccount) {
+                recommendationText += `\n\nNote: CENT Account mode (1 USD = 100 USC).`;
+            }
             
             document.getElementById('recommendation-text').textContent = recommendationText;
             
@@ -3135,14 +4232,15 @@
             lotRecommendations = {
                 optimalLot: finalLot,
                 maxLayering: maxLayering,
-                lastUpdated: new Date().toISOString()
+                lastUpdated: new Date().toISOString(),
+                accountType: config.accountType
             };
             
             localStorage.setItem('lotRecommendations', JSON.stringify(lotRecommendations));
             
             // Update recommendation card on home
             document.getElementById('recommendationCard').style.display = 'block';
-            document.getElementById('card-lot').textContent = finalLot.toFixed(2);
+            document.getElementById('card-lot').textContent = finalLot.toFixed(4);
             document.getElementById('card-layering').textContent = maxLayering;
             
             // Show popup recommendation
@@ -3159,7 +4257,7 @@
         }
         
         function showRecommendationPopup(lot, layering) {
-            document.getElementById('popup-lot').textContent = lot.toFixed(2);
+            document.getElementById('popup-lot').textContent = lot.toFixed(4);
             document.getElementById('popup-layering').textContent = layering;
             document.getElementById('recommendationPopup').classList.add('active');
             
@@ -3514,7 +4612,7 @@
         }
 
         function addWithdrawal() {
-            const amt = parseFloat(prompt("Jumlah WD ($):"));
+            const amt = parseFloat(prompt("Jumlah WD (" + (config.accountType === 'cent' ? '¢' : '$') + "):"));
             if(!isNaN(amt) && amt > 0) {
                 withdrawals.unshift({ id: Date.now(), amount: amt, date: new Date().toLocaleDateString() });
                 localStorage.setItem('withdrawals', JSON.stringify(withdrawals));
@@ -3523,11 +4621,46 @@
                 // Notifikasi
                 if(Notification.permission === "granted") {
                     new Notification("WD Success!", {
-                        body: `Withdrawal $${amt} telah dicatat. Good job!`,
+                        body: `Withdrawal ${config.accountType === 'cent' ? '¢' : '$'}${amt} telah dicatat. Good job!`,
                         icon: "https://cdn-icons-png.flaticon.com/512/3112/3112946.png"
                     });
                 }
             }
+        }
+        
+        // NEW WITHDRAWAL FUNCTIONS
+        function showAllWithdrawals() {
+            let allWithdrawals = "📊 ALL WITHDRAWALS\n\n";
+            let totalWithdrawn = 0;
+            
+            withdrawals.forEach((wd, index) => {
+                allWithdrawals += `${index + 1}. ${wd.date}: ${config.accountType === 'cent' ? '¢' : '$'}${wd.amount}\n`;
+                totalWithdrawn += wd.amount;
+            });
+            
+            allWithdrawals += `\n💰 TOTAL WITHDRAWN: ${config.accountType === 'cent' ? '¢' : '$'}${totalWithdrawn.toLocaleString()}`;
+            alert(allWithdrawals);
+        }
+        
+        function exportWithdrawals() {
+            const data = {
+                withdrawals: withdrawals,
+                total: withdrawals.reduce((sum, wd) => sum + wd.amount, 0),
+                accountType: config.accountType,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `withdrawals_export_${new Date().toLocaleDateString().replace(/\//g, '-')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert(`Withdrawals exported successfully!\nTotal: ${config.accountType === 'cent' ? '¢' : '$'}${data.total.toLocaleString()}`);
         }
 
         function deleteWD(id) {
@@ -3725,7 +4858,7 @@
                 const currentPnlDisplay = (t.result === 'running' || t.result === 'floating') && t.currentPnl ? 
                     `<div style="margin-top: 12px; padding: 12px; background: ${t.result === 'running' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; border-radius: 12px; font-size: 13px;">
                         <div style="color: ${t.result === 'running' ? 'var(--running-color)' : 'var(--floating-color)'}; font-weight: 600;">
-                            <i class="fas fa-chart-line"></i> Floating P&L: <strong>$${t.currentPnl}</strong>
+                            <i class="fas fa-chart-line"></i> Floating P&L: <strong>${config.accountType === 'cent' ? '¢' : '$'}${t.currentPnl}</strong>
                         </div>
                         ${t.currentPnlTimestamp ? 
                             `<div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">
@@ -3736,7 +4869,7 @@
                 
                 const pnlDisplay = t.result === 'running' || t.result === 'floating' ? 
                     'ACTIVE' : 
-                    `${t.result === 'win' ? '+' : '-'}$${Math.abs(val)}`;
+                    `${t.result === 'win' ? '+' : '-'}${config.accountType === 'cent' ? '¢' : '$'}${Math.abs(val)}`;
                 
                 const borderColor = t.result === 'running' ? 'var(--running-color)' : 
                                    t.result === 'floating' ? 'var(--floating-color)' : 
@@ -3773,7 +4906,7 @@
             wdList.innerHTML = '';
             withdrawals.forEach(w => {
                 wdList.innerHTML += `<div class="wd-item">
-                    <span><small style="color:var(--text-tertiary);">${w.date}</small> - <strong style="color:var(--wd-color);">$${w.amount}</strong></span>
+                    <span><small style="color:var(--text-tertiary);">${w.date}</small> - <strong style="color:var(--wd-color);">${config.accountType === 'cent' ? '¢' : '$'}${w.amount}</strong></span>
                     <i class="fas fa-trash-alt del-btn" onclick="deleteWD(${w.id})"></i>
                 </div>`;
             });
@@ -3812,23 +4945,23 @@
                 balanceBreakdownDiv.style.display = 'block';
                 
                 let breakdownHTML = '<div class="balance-line">';
-                breakdownHTML += `<span>Balance Closed:</span><span>$${finalClosedEq.toLocaleString()}</span>`;
+                breakdownHTML += `<span>Balance Closed:</span><span>${config.accountType === 'cent' ? '¢' : '$'}${finalClosedEq.toLocaleString()}</span>`;
                 breakdownHTML += '</div>';
                 
                 if (floatingCount > 0 && totalFloatingLoss !== 0) {
                     breakdownHTML += `<div class="balance-line balance-negative">`;
-                    breakdownHTML += `<span>Floating Loss (${floatingCount}):</span><span>$${totalFloatingLoss.toLocaleString()}</span>`;
+                    breakdownHTML += `<span>Floating Loss (${floatingCount}):</span><span>${config.accountType === 'cent' ? '¢' : '$'}${totalFloatingLoss.toLocaleString()}</span>`;
                     breakdownHTML += '</div>';
                 }
                 
                 if (runningCount > 0 && totalRunningProfit !== 0) {
                     breakdownHTML += `<div class="balance-line balance-positive">`;
-                    breakdownHTML += `<span>Running Profit (${runningCount}):</span><span>+$${totalRunningProfit.toLocaleString()}</span>`;
+                    breakdownHTML += `<span>Running Profit (${runningCount}):</span><span>+${config.accountType === 'cent' ? '¢' : '$'}${totalRunningProfit.toLocaleString()}</span>`;
                     breakdownHTML += '</div>';
                 }
                 
                 breakdownHTML += `<div class="balance-line" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; margin-top: 8px; font-weight: 700;">`;
-                breakdownHTML += `<span>Floating Adjusted:</span><span>$${floatingAdjustedBalance.toLocaleString()}</span>`;
+                breakdownHTML += `<span>Floating Adjusted:</span><span>${config.accountType === 'cent' ? '¢' : '$'}${floatingAdjustedBalance.toLocaleString()}</span>`;
                 breakdownHTML += '</div>';
                 
                 balanceBreakdownDiv.innerHTML = breakdownHTML;
@@ -3838,11 +4971,11 @@
                 let floatingText = '';
                 
                 if (floatingDifference < 0) {
-                    floatingText = `Balance - Floating: <strong style="color: var(--floating-color);">$${Math.abs(floatingDifference).toLocaleString()}</strong>`;
+                    floatingText = `Balance - Floating: <strong style="color: var(--floating-color);">${config.accountType === 'cent' ? '¢' : '$'}${Math.abs(floatingDifference).toLocaleString()}</strong>`;
                 } else if (floatingDifference > 0) {
-                    floatingText = `Balance + Running: <strong style="color: var(--running-color);">+$${floatingDifference.toLocaleString()}</strong>`;
+                    floatingText = `Balance + Running: <strong style="color: var(--running-color);">+${config.accountType === 'cent' ? '¢' : '$'}${floatingDifference.toLocaleString()}</strong>`;
                 } else {
-                    floatingText = `Floating/Running: <strong>$0</strong>`;
+                    floatingText = `Floating/Running: <strong>${config.accountType === 'cent' ? '¢' : '$'}0</strong>`;
                 }
                 
                 floatingBalanceDiv.innerHTML = `<i class="fas fa-calculator"></i> ${floatingText}`;
@@ -3865,19 +4998,19 @@
                 equityCard.classList.add('running');
                 balanceStatusIndicator.classList.add('balance-running');
                 balanceStatusIndicator.innerHTML = `<span class="balance-dot dot-running"></span> ${runningCount} RUNNING`;
-                activeTradesInfo.innerHTML = `<i class="fas fa-chart-line" style="color: var(--running-color);"></i> Balance HIJAU: ${runningCount} trade RUNNING (+$${totalRunningProfit})`;
+                activeTradesInfo.innerHTML = `<i class="fas fa-chart-line" style="color: var(--running-color);"></i> Balance HIJAU: ${runningCount} trade RUNNING (+${config.accountType === 'cent' ? '¢' : '$'}${totalRunningProfit})`;
                 
             } else if (floatingCount > 0 && runningCount === 0) {
                 equityCard.classList.add('floating');
                 balanceStatusIndicator.classList.add('balance-floating');
                 balanceStatusIndicator.innerHTML = `<span class="balance-dot dot-floating"></span> ${floatingCount} FLOATING`;
-                activeTradesInfo.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: var(--floating-color);"></i> Balance MERAH: ${floatingCount} trade FLOATING ($${totalFloatingLoss})`;
+                activeTradesInfo.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: var(--floating-color);"></i> Balance MERAH: ${floatingCount} trade FLOATING (${config.accountType === 'cent' ? '¢' : '$'}${totalFloatingLoss})`;
                 
             } else if (runningCount > 0 && floatingCount > 0) {
                 equityCard.classList.add('mixed');
                 balanceStatusIndicator.classList.add('balance-mixed');
                 balanceStatusIndicator.innerHTML = `<span class="balance-dot" style="background: linear-gradient(45deg, var(--running-color) 50%, var(--floating-color) 50%);"></span> ${runningCount}R + ${floatingCount}F`;
-                activeTradesInfo.innerHTML = `<i class="fas fa-random" style="color: #f59e0b;"></i> Balance ORANGE: ${runningCount}R + ${floatingCount}F (Net: $${(totalRunningProfit + totalFloatingLoss).toLocaleString()})`;
+                activeTradesInfo.innerHTML = `<i class="fas fa-random" style="color: #f59e0b;"></i> Balance ORANGE: ${runningCount}R + ${floatingCount}F (Net: ${config.accountType === 'cent' ? '¢' : '$'}${(totalRunningProfit + totalFloatingLoss).toLocaleString()})`;
                 
             } else {
                 activeTradesInfo.innerHTML = `<i class="fas fa-check-circle" style="color: var(--win-color);"></i> Tidak ada trade aktif`;
@@ -3891,7 +5024,7 @@
                     const activeCount = runningCount + floatingCount;
                     const netFloating = totalRunningProfit + totalFloatingLoss;
                     let floatingStatus = netFloating >= 0 ? "profit" : "loss";
-                    aiMessage = `AI: Ada <strong>${activeCount} trade</strong> aktif. Floating adjusted: <strong>$${Math.abs(netFloating).toLocaleString()} ${floatingStatus}</strong>`;
+                    aiMessage = `AI: Ada <strong>${activeCount} trade</strong> aktif. Floating adjusted: <strong>${config.accountType === 'cent' ? '¢' : '$'}${Math.abs(netFloating).toLocaleString()} ${floatingStatus}</strong>`;
                 } else if(emotionLoss[worst] > 0) {
                     aiMessage = `AI: Loss terbanyak pas lagi <strong>${worst}</strong>. Control emosi lo!`;
                 } else {
@@ -3944,7 +5077,7 @@
         }
 
         function editEquity() {
-            const newCapital = prompt("Edit Modal Awal ($):", config.capital);
+            const newCapital = prompt("Edit Modal Awal (" + (config.accountType === 'cent' ? '¢' : '$') + "):", config.capital);
             if(newCapital !== null && !isNaN(parseFloat(newCapital))) {
                 config.capital = parseFloat(newCapital);
                 localStorage.setItem('traderConfig', JSON.stringify(config));
@@ -3986,7 +5119,7 @@
                     <img src="${i.img || 'https://via.placeholder.com/150'}" style="width:100%; height:140px; object-fit:cover;">
                     <div style="padding:16px;">
                         <small style="font-size:12px; color:var(--text-tertiary);">${i.name}</small><br>
-                        <strong style="font-size:18px;">$${i.price.toLocaleString()}</strong>
+                        <strong style="font-size:18px;">${config.accountType === 'cent' ? '¢' : '$'}${i.price.toLocaleString()}</strong>
                         <div class="progress-container" style="margin-top:12px;">
                             <div class="progress-bar" style="width:${p}%;"></div>
                         </div>
@@ -4093,7 +5226,7 @@
             }
         }
 
-        // ==================== TRADINGVIEW PRICES ====================
+        // ==================== MARKET PRICE FUNCTIONS ====================
         async function refreshMarketPrices() {
             try {
                 // Show loading spinners
@@ -4104,40 +5237,62 @@
                     loading.style.display = 'inline';
                 });
                 
-                // Simulate price changes for demo
-                const demoPrices = {
-                    'xau-price': `${(4533.99 + Math.random() * 1 - 3).toFixed(2)}`,
-                    'btc-price': `${(87532.99 + Math.random() * 500 - 250).toFixed(2)}`,
-                    'us30-price': `${(5 + Math.random() * 10 - 5).toFixed(2)}`,
-                    'nas100-price': `${(25644.39 + Math.random() * 10 - 2).toFixed(2)}`
-                };
+                // Check if market is closed
+                const marketClosed = config.adminSettings?.marketClosed || false;
+                
+                // Check for manual prices first
+                const manualPrices = config.adminSettings?.manualPrices;
+                let demoPrices;
+                
+                if (manualPrices && Object.keys(manualPrices).length > 0) {
+                    // Use manual prices
+                    demoPrices = {
+                        'xau-price': manualPrices.xau || '4533.99',
+                        'btc-price': manualPrices.btc || '87532.99',
+                        'us30-price': manualPrices.us30 || '39500.50',
+                        'nas100-price': manualPrices.nas100 || '25644.39'
+                    };
+                } else {
+                    // Simulate price changes for demo
+                    demoPrices = {
+                        'xau-price': `${(4533.99 + Math.random() * 1 - 3).toFixed(2)}`,
+                        'btc-price': `${(87532.99 + Math.random() * 500 - 250).toFixed(2)}`,
+                        'us30-price': `${(39500.50 + Math.random() * 10 - 5).toFixed(2)}`,
+                        'nas100-price': `${(25644.39 + Math.random() * 10 - 2).toFixed(2)}`
+                    };
+                }
                 
                 Object.keys(demoPrices).forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
                         const price = demoPrices[id];
                         const oldPrice = parseFloat(el.innerText.replace(/[^0-9.-]+/g, "")) || parseFloat(price);
-                        el.innerHTML = price;
+                        el.innerHTML = marketClosed && !id.includes('btc') ? 'CLOSED' : price;
                         
-                        // Update color
-                        if (el.oldPrice && price !== el.oldPrice) {
-                            const newPriceNum = parseFloat(price);
-                            const oldPriceNum = parseFloat(el.oldPrice);
-                            
-                            if (newPriceNum > oldPriceNum) {
-                                el.className = "up";
-                                el.classList.add('price-up');
-                                setTimeout(() => el.classList.remove('price-up'), 500);
-                            } else if (newPriceNum < oldPriceNum) {
-                                el.className = "down";
-                                el.classList.add('price-down');
-                                setTimeout(() => el.classList.remove('price-down'), 500);
+                        // Update color if market is open
+                        if (!marketClosed || id.includes('btc')) {
+                            if (el.oldPrice && price !== el.oldPrice) {
+                                const newPriceNum = parseFloat(price);
+                                const oldPriceNum = parseFloat(el.oldPrice);
+                                
+                                if (newPriceNum > oldPriceNum) {
+                                    el.className = "up";
+                                    el.classList.add('price-up');
+                                    setTimeout(() => el.classList.remove('price-up'), 500);
+                                } else if (newPriceNum < oldPriceNum) {
+                                    el.className = "down";
+                                    el.classList.add('price-down');
+                                    setTimeout(() => el.classList.remove('price-down'), 500);
+                                }
                             }
                         }
                         
                         el.oldPrice = price;
                     }
                 });
+                
+                // Update market status display
+                updateMarketStatusDisplay();
                 
                 // Hide loading spinners
                 setTimeout(() => {
@@ -4153,20 +5308,24 @@
                 console.log("Market refresh error:", err);
                 
                 // Set fallback prices if API fails
+                const marketClosed = config.adminSettings?.marketClosed || false;
                 const fallbackPrices = {
-                    'xau-price': '4,533,99',
+                    'xau-price': marketClosed ? 'CLOSED' : '4,533.99',
                     'btc-price': '87,532.99',
-                    'us30-price': 'Did Not Have Data',
-                    'nas100-price': '25,644.39'
+                    'us30-price': marketClosed ? 'CLOSED' : '39,500.50',
+                    'nas100-price': marketClosed ? 'CLOSED' : '25,644.39'
                 };
                 
                 Object.keys(fallbackPrices).forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
                         el.innerHTML = fallbackPrices[id];
-                        el.className = "up";
+                        el.className = id.includes('btc') ? "up" : (marketClosed ? "" : "up");
                     }
                 });
+                
+                // Update market status display
+                updateMarketStatusDisplay();
                 
                 // Hide loading spinners
                 document.querySelectorAll('.spinner').forEach(spinner => {
@@ -4175,6 +5334,27 @@
                 document.querySelectorAll('.price-loading').forEach(loading => {
                     loading.style.display = 'none';
                 });
+            }
+        }
+        
+        function updatePriceDisplay(elementId, price) {
+            const el = document.getElementById(elementId);
+            if (el) {
+                const oldPrice = parseFloat(el.innerText.replace(/[^0-9.-]+/g, "")) || price;
+                el.innerHTML = price.toFixed(2);
+                
+                // Update color
+                if (price > oldPrice) {
+                    el.className = "up";
+                    el.classList.add('price-up');
+                    setTimeout(() => el.classList.remove('price-up'), 500);
+                } else if (price < oldPrice) {
+                    el.className = "down";
+                    el.classList.add('price-down');
+                    setTimeout(() => el.classList.remove('price-down'), 500);
+                }
+                
+                el.oldPrice = price;
             }
         }
 
@@ -4340,7 +5520,8 @@
                     floatingTrades: floatingCount,
                     emotions: emotions,
                     bestPair: getBestPair(),
-                    worstDay: getWorstDay()
+                    worstDay: getWorstDay(),
+                    accountType: config.accountType
                 },
                 recentTrades: trades.slice(0, 5).map(t => ({
                     pair: t.pair,
@@ -4402,7 +5583,8 @@
                 - Running Trades: ${context.traderStats.runningTrades}
                 - Floating Trades: ${context.traderStats.floatingTrades}
                 - Emosi dominan: ${JSON.stringify(context.traderStats.emotions)}
-                - Balance saat ini: $${context.currentBalance}
+                - Account Type: ${context.traderStats.accountType === 'cent' ? 'CENT Account (USC)' : 'USD Account'}
+                - Balance saat ini: ${context.traderStats.accountType === 'cent' ? '¢' : '$'}${context.currentBalance}
                 - Status Floating: ${context.floatingStatus}
                 
                 Berikan analisis trading yang praktis, saran manajemen emosi, dan strategi improvement.
@@ -4471,7 +5653,8 @@
                 Running Trades: ${context.traderStats.runningTrades}
                 Floating Trades: ${context.traderStats.floatingTrades}
                 Emosi dominan: ${JSON.stringify(context.traderStats.emotions)}
-                Balance saat ini: $${context.currentBalance}
+                Account Type: ${context.traderStats.accountType === 'cent' ? 'CENT Account (USC)' : 'USD Account'}
+                Balance saat ini: ${context.traderStats.accountType === 'cent' ? '¢' : '$'}${context.currentBalance}
                 Status Floating: ${context.floatingStatus}
                 
                 [Tugas Kamu]
@@ -4545,7 +5728,8 @@
                 - Running Trades: ${context.traderStats.runningTrades}
                 - Floating Trades: ${context.traderStats.floatingTrades}
                 - Emosi dominan: ${JSON.stringify(context.traderStats.emotions)}
-                - Balance: $${context.currentBalance}
+                - Account Type: ${context.traderStats.accountType === 'cent' ? 'CENT Account (USC)' : 'USD Account'}
+                - Balance: ${context.traderStats.accountType === 'cent' ? '¢' : '$'}${context.currentBalance}
                 - Status: ${context.floatingStatus}
                 
                 Berikan saran trading yang praktis, analisis pattern, dan bantu trader menjadi lebih disiplin.
@@ -4594,11 +5778,14 @@
         }
 
         function generateFallbackResponse(context, userMessage) {
+            const isCentAccount = context.traderStats.accountType === 'cent';
+            const currencySymbol = isCentAccount ? '¢' : '$';
+            
             const responses = [
                 `Berdasarkan data trading lo (${context.traderStats.totalTrades} trades, WR ${context.traderStats.winRate}%), fokus di pair yang konsisten profit. Jangan FOMO!`,
                 `Saya lihat ada ${context.traderStats.runningTrades} running dan ${context.traderStats.floatingTrades} floating trade. Manage risk dengan baik ya!`,
                 `Emosi trading lo perlu diperbaiki. Coba lebih tenang saat entry dan disiplin dengan stop loss.`,
-                `Balance lo sekarang $${context.currentBalance}. Tetap konsisten dan jangan revenge trading!`,
+                `Balance lo sekarang ${currencySymbol}${context.currentBalance}. Tetap konsisten dan jangan revenge trading!`,
                 `Analisis pattern: Coba review journal trading lo untuk cari pattern yang bekerja.`,
                 `Untuk pertanyaan "${userMessage}", saran saya: tetap disiplin dengan risk management 1-2% per trade.`,
                 `Win rate ${context.traderStats.winRate}% bisa ditingkatkan dengan fokus di setup high probability saja.`,
