@@ -1,0 +1,4694 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pro Trader Journal v7.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ========== TUTORIAL MODAL STYLES ========== */
+        .tutorial-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 99999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .tutorial-content {
+            background: linear-gradient(135deg, rgba(30, 30, 45, 0.98) 0%, rgba(20, 20, 35, 0.98) 100%);
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            color: white;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tutorial-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+        }
+        
+        .tutorial-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .tutorial-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .tutorial-subtitle {
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+        
+        .tutorial-step {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tutorial-step.active {
+            display: block;
+        }
+        
+        .step-content {
+            margin-bottom: 25px;
+        }
+        
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+        
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+        
+        .step-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .step-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .step-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .step-indicator.active {
+            background: var(--accent-color);
+            transform: scale(1.2);
+        }
+        
+        .tutorial-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .tutorial-btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tutorial-btn.skip {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-secondary);
+        }
+        
+        .tutorial-btn.skip:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .tutorial-btn.next {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            color: white;
+        }
+        
+        .tutorial-btn.next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+        
+        .tutorial-btn.finish {
+            background: linear-gradient(135deg, var(--win-color), #059669);
+            color: white;
+        }
+        
+        .tutorial-btn.finish:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* ========== LOT CALCULATOR STYLES ========== */
+        .lot-calculator-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999999;
+            backdrop-filter: blur(15px);
+            padding: 20px;
+        }
+        
+        .lot-calculator-modal.active {
+            display: flex;
+        }
+        
+        .lot-calculator-content {
+            background: rgba(25, 25, 35, 0.98);
+            border-radius: 25px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            animation: slideUp 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        
+        .lot-calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .lot-calculator-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .close-lot-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .close-lot-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .lot-form-group {
+            margin-bottom: 20px;
+        }
+        
+        .lot-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 600;
+        }
+        
+        .lot-input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .lot-input {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .lot-input:focus {
+            border-color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .lot-input-unit {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+        
+        .calculate-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            border: none;
+            color: white;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+        
+        .result-container {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .result-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+        
+        .lot-result {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .lot-result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+        
+        .lot-result-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .lot-result-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+        
+        .lot-recommendation {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+            border-radius: 15px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .lot-recommendation-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--win-color);
+        }
+        
+        .lot-recommendation-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .lot-warning {
+            font-size: 12px;
+            color: #f59e0b;
+            text-align: center;
+            margin-top: 15px;
+            opacity: 0.8;
+        }
+        
+        /* ========== RECOMMENDATION POPUP ========== */
+        .recommendation-popup {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            right: 20px;
+            z-index: 999999;
+            background: linear-gradient(135deg, rgba(25, 25, 35, 0.95) 0%, rgba(20, 20, 30, 0.98) 100%);
+            border-radius: 18px;
+            padding: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            backdrop-filter: blur(20px);
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+        
+        .recommendation-popup.active {
+            display: block;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .recommendation-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .recommendation-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .recommendation-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .close-recommendation {
+            margin-left: auto;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .close-recommendation:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .recommendation-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .recommendation-box {
+            padding: 18px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .recommendation-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .recommendation-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--accent-color);
+        }
+        
+        .recommendation-note {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        
+        /* ========== MAIN STYLES ========== */
+        :root { 
+            --bg-color: #0a0a0f; 
+            --accent-color: #6366f1; 
+            --accent-color-2: #8b5cf6; 
+            --card-bg: rgba(255, 255, 255, 0.03); 
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08); 
+            --win-color: #10b981; 
+            --loss-color: #ef4444; 
+            --wd-color: #3b82f6; 
+            --running-color: #10b981;
+            --floating-color: #ef4444;
+            --ai-color: #8b5cf6;
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--bg-color); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed; 
+            color: var(--text-primary); 
+            margin: 0; 
+            padding: 20px 20px 160px 20px; 
+            min-height: 100vh; 
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(135deg, rgba(10,10,15,0.9) 0%, rgba(30,30,40,0.95) 100%); 
+            z-index: -2; 
+            pointer-events: none; 
+        }
+        
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px; 
+            position: relative; 
+            z-index: 10; 
+            padding: 10px 0;
+        }
+        
+        .header-text {
+            flex: 1;
+        }
+        
+        .header-text small {
+            color: var(--text-tertiary);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .header-text h2 {
+            margin: 5px 0 0 0;
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .user-avatar { 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 15px; 
+            border: 2px solid var(--accent-color); 
+            object-fit: cover; 
+            background: #1e1e2e; 
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        
+        .user-avatar:active {
+            transform: scale(0.95);
+        }
+        
+        .section { 
+            display: none; 
+            animation: fadeIn 0.4s ease; 
+            position: relative; 
+            z-index: 5; 
+        }
+        
+        .section.active { 
+            display: block; 
+        }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 18px; 
+            padding: 22px; 
+            margin-bottom: 16px; 
+            border: var(--glass-border); 
+            backdrop-filter: blur(15px); 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Equity Card */
+        .equity-card {
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-color-2) 100%);
+            border-radius: 22px;
+            padding: 28px 24px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            color: white;
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.3);
+            border: none;
+            transition: all 0.5s ease;
+        }
+        
+        .equity-card.running {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.3);
+        }
+        
+        .equity-card.floating {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            box-shadow: 0 15px 35px rgba(239, 68, 68, 0.3);
+        }
+        
+        .equity-card.mixed {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.3);
+        }
+        
+        .equity-card::before {
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -100px;
+            right: -80px;
+        }
+        
+        .equity-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .equity-label {
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        
+        .equity-amount {
+            font-size: 40px;
+            font-weight: 800;
+            margin: 10px 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .equity-growth {
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0.95;
+            background: rgba(255, 255, 255, 0.15);
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-top: 5px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .equity-edit {
+            position: absolute;
+            top: 22px;
+            right: 22px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .equity-edit:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        input, select, textarea { 
+            width: 100%; 
+            padding: 14px 16px; 
+            margin-bottom: 14px; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 12px; 
+            color: var(--text-primary); 
+            outline: none; 
+            font-family: 'Poppins', sans-serif; 
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        textarea { 
+            min-height: 120px; 
+            resize: vertical; 
+        }
+        
+        .btn-primary { 
+            width: 100%; 
+            padding: 16px; 
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2)); 
+            border: none; 
+            color: white; 
+            font-weight: 600; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .nav-container { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 92%; 
+            max-width: 480px; 
+            background: rgba(20, 20, 30, 0.95); 
+            backdrop-filter: blur(25px); 
+            -webkit-backdrop-filter: blur(25px); 
+            border-radius: 20px; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 14px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            z-index: 999999; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+            pointer-events: auto; 
+        }
+        
+        .nav-btn { 
+            background: none; 
+            border: none; 
+            color: var(--text-tertiary); 
+            font-size: 20px; 
+            cursor: pointer; 
+            flex: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 12px; 
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn.active { 
+            color: var(--accent-color); 
+            background: rgba(99, 102, 241, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .stat-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 14px; 
+        }
+        
+        .stat-box { 
+            background: rgba(255,255,255,0.03); 
+            padding: 18px 12px; 
+            border-radius: 16px; 
+            text-align: center; 
+            border: var(--glass-border); 
+            transition: all 0.3s;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .history-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 8px 0;
+        }
+        
+        .del-btn { 
+            color: var(--text-tertiary); 
+            cursor: pointer; 
+            padding: 6px; 
+            font-size: 15px; 
+            transition: 0.2s; 
+            border-radius: 8px;
+        }
+        
+        .del-btn:hover { 
+            color: var(--loss-color); 
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        .edit-btn {
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: 6px;
+            font-size: 15px;
+            transition: 0.2s;
+            margin-left: 10px;
+            border-radius: 8px;
+        }
+        
+        .edit-btn:hover {
+            color: var(--wd-color);
+            background: rgba(59, 130, 246, 0.1);
+        }
+        
+        .progress-container { 
+            width: 100%; 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 10px; 
+            height: 6px; 
+            margin: 8px 0; 
+            overflow: hidden; 
+        }
+        
+        .progress-bar { 
+            height: 100%; 
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2)); 
+            border-radius: 10px;
+        }
+        
+        .label-small { 
+            font-size: 11px; 
+            color: var(--text-tertiary); 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600;
+        }
+        
+        .wd-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 14px 0; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+        }
+        
+        .chart-container { 
+            width: 100%; 
+            height: 180px; 
+            position: relative; 
+            margin-top: 10px;
+        }
+        
+        .ai-msg { 
+            background: rgba(59, 130, 246, 0.08); 
+            border-left: 4px solid var(--wd-color); 
+            padding: 16px; 
+            border-radius: 14px; 
+            font-size: 13px; 
+            margin-top: 10px; 
+            color: var(--text-secondary); 
+            line-height: 1.6; 
+        }
+        
+        .vault-img { 
+            width: 100%; 
+            height: 180px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            margin-top: 12px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+        }
+        
+        .journal-entry { 
+            border-left: 4px solid var(--accent-color); 
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+        
+        .journal-entry:hover {
+            transform: translateX(5px);
+        }
+        
+        .journal-category { 
+            display: inline-block; 
+            padding: 6px 14px; 
+            border-radius: 10px; 
+            font-size: 10px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            margin-bottom: 10px; 
+            letter-spacing: 0.5px;
+        }
+        
+        .cat-mistake { 
+            background: rgba(239, 68, 68, 0.15); 
+            color: var(--loss-color); 
+        }
+        
+        .cat-lesson { 
+            background: rgba(16, 185, 129, 0.15); 
+            color: var(--win-color); 
+        }
+        
+        .cat-analysis { 
+            background: rgba(59, 130, 246, 0.15); 
+            color: var(--wd-color); 
+        }
+        
+        .cat-note { 
+            background: rgba(245, 158, 11, 0.15); 
+            color: #f59e0b; 
+        }
+        
+        /* Settings Modal */
+        .settings-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            backdrop-filter: blur(10px);
+            padding: 20px;
+        }
+
+        .settings-modal.active {
+            display: flex;
+        }
+
+        .settings-content {
+            background: rgba(30, 30, 45, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 420px;
+            color: white;
+            animation: slideUp 0.3s ease;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .settings-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .close-modal-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .setting-group {
+            margin-bottom: 25px;
+        }
+
+        .setting-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 600;
+        }
+
+        .upload-area {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: var(--text-tertiary);
+        }
+
+        .upload-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        .current-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+        }
+
+        .current-profile-pic {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            border: 3px solid var(--accent-color);
+            object-fit: cover;
+            background: #333;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        
+        .color-picker-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .color-picker-item label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .color-picker-item input[type="color"] {
+            width: 100%;
+            height: 50px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            padding: 0;
+            background: none;
+            transition: all 0.2s;
+        }
+        
+        .color-picker-item input[type="color"]:hover {
+            border-color: var(--accent-color);
+            transform: scale(1.02);
+        }
+        
+        .gradient-preview {
+            width: 100%;
+            height: 60px;
+            border-radius: 15px;
+            margin: 15px 0;
+            border: none;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .settings-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .settings-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .settings-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        
+        /* Live Market Section */
+        .live-market-section {
+            margin: 20px 0 16px;
+        }
+
+        .live-market-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .refresh-btn {
+            margin-left: auto;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-secondary);
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--accent-color);
+        }
+
+        .live-price-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 8px 0;
+            scroll-snap-type: x mandatory;
+        }
+
+        .live-price-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .price-card {
+            min-width: 110px;
+            padding: 16px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            scroll-snap-align: start;
+            transition: all 0.3s;
+        }
+
+        .price-card:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-2px);
+        }
+
+        .price-card small {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .price-card strong {
+            font-size: 18px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .up { color: var(--win-color); }
+        .down { color: var(--loss-color); }
+
+        /* Edit Trade Modal */
+        .edit-trade-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999999;
+            backdrop-filter: blur(15px);
+            padding: 20px;
+        }
+
+        .edit-trade-modal.active {
+            display: flex;
+        }
+
+        .edit-trade-content {
+            background: rgba(25, 25, 35, 0.98);
+            border-radius: 25px;
+            padding: 25px;
+            width: 100%;
+            max-width: 420px;
+            animation: slideUp 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .edit-trade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .edit-trade-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .close-edit-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .close-edit-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Running/Floating Styles */
+        .running-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--running-color), #059669);
+            color: white;
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-left: 8px;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        .floating-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--floating-color), #dc2626);
+            color: white;
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-left: 8px;
+            font-weight: 700;
+        }
+
+        .current-pnl-input {
+            font-size: 14px;
+            padding: 12px;
+            margin-top: 5px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--running-color);
+            color: var(--running-color);
+            border-radius: 12px;
+        }
+
+        .timestamp {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 5px;
+            display: block;
+        }
+
+        .status-option {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+        
+        .status-running {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--running-color);
+        }
+        
+        .status-floating {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--floating-color);
+        }
+        
+        .pnl-update-btn {
+            background: linear-gradient(135deg, var(--running-color), #059669);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 5px;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .pnl-update-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Balance Status Indicator */
+        .balance-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 10px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            backdrop-filter: blur(10px);
+        }
+        
+        .balance-running {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--running-color);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .balance-floating {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--floating-color);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .balance-mixed {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .balance-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .dot-running {
+            background: var(--running-color);
+            box-shadow: 0 0 6px var(--running-color);
+        }
+        
+        .dot-floating {
+            background: var(--floating-color);
+            box-shadow: 0 0 6px var(--floating-color);
+        }
+        
+        .equity-info {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .equity-info-item {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Floating Balance Info */
+        .balance-breakdown {
+            margin-top: 12px;
+            font-size: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .balance-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            padding: 4px 0;
+        }
+        
+        .balance-negative {
+            color: var(--floating-color);
+        }
+        
+        .balance-positive {
+            color: var(--running-color);
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top: 2px solid var(--accent-color);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .price-loading {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        
+        /* AI Chatbot Styles */
+        .ai-chatbot-container {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            z-index: 999998;
+        }
+        
+        .ai-chatbot-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--ai-color) 0%, #7c3aed 100%);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-chatbot-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .ai-chatbot-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.6);
+        }
+        
+        .ai-chatbot-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .ai-chatbot-btn:active {
+            transform: translateY(-2px) scale(1);
+        }
+        
+        .ai-chatbot-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999999;
+            backdrop-filter: blur(15px);
+            padding: 20px;
+        }
+        
+        .ai-chatbot-modal.active {
+            display: flex;
+        }
+        
+        .ai-chatbot-content {
+            background: rgba(25, 25, 35, 0.98);
+            border-radius: 25px;
+            padding: 0;
+            width: 100%;
+            max-width: 480px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        
+        .ai-chatbot-header {
+            padding: 24px;
+            background: linear-gradient(135deg, var(--ai-color) 0%, #7c3aed 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .ai-chatbot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .close-ai-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .close-ai-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: rotate(90deg);
+        }
+        
+        .ai-chatbot-body {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            max-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .ai-message {
+            margin: 0;
+            padding: 16px;
+            border-radius: 18px;
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.6;
+            animation: messageAppear 0.3s ease;
+        }
+        
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .ai-message-bot {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-bottom-left-radius: 5px;
+            align-self: flex-start;
+        }
+        
+        .ai-message-user {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-bottom-right-radius: 5px;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        
+        .ai-chatbot-footer {
+            padding: 20px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .ai-input {
+            flex: 1;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: white;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .ai-input:focus {
+            border-color: var(--ai-color);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .ai-send-btn {
+            background: linear-gradient(135deg, var(--ai-color), #7c3aed);
+            border: none;
+            color: white;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .ai-send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+        
+        .ai-thinking {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            margin-bottom: 0;
+            align-self: flex-start;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .ai-dots {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .ai-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--ai-color);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        
+        .ai-dot:nth-child(1) { animation-delay: -0.32s; }
+        .ai-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        
+        .ai-preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 16px 0;
+        }
+        
+        .ai-preset-btn {
+            padding: 12px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .ai-preset-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+            transform: translateY(-2px);
+            border-color: var(--ai-color);
+        }
+        
+        .api-key-input {
+            font-size: 13px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--ai-color);
+            border-radius: 12px;
+            color: white;
+            width: 100%;
+            margin-top: 8px;
+        }
+        
+        .api-key-input:focus {
+            background: rgba(0, 0, 0, 0.4);
+        }
+        
+        .ai-warning {
+            font-size: 11px;
+            color: #f59e0b;
+            text-align: center;
+            margin-top: 8px;
+            display: block;
+        }
+        
+        /* Price Update Animation */
+        .price-up {
+            animation: priceUp 0.5s ease;
+        }
+        
+        .price-down {
+            animation: priceDown 0.5s ease;
+        }
+        
+        @keyframes priceUp {
+            0% { color: inherit; }
+            50% { color: var(--win-color); transform: scale(1.1); }
+            100% { color: var(--win-color); }
+        }
+        
+        @keyframes priceDown {
+            0% { color: inherit; }
+            50% { color: var(--loss-color); transform: scale(1.1); }
+            100% { color: var(--loss-color); }
+        }
+        
+        /* TradingView Widget */
+        .tradingview-widget {
+            height: 46px;
+            margin-top: 5px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .widget-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        /* Scrollbar untuk AI Chatbot */
+        .ai-chatbot-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .ai-chatbot-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .ai-chatbot-body::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 10px;
+        }
+        
+        .ai-chatbot-body::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.8);
+        }
+        
+        /* Section Headers */
+        h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 10px 0 20px 0;
+            color: var(--text-primary);
+        }
+        
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 0 12px 0;
+            color: var(--text-secondary);
+        }
+        
+        /* Form Group */
+        .form-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-tertiary);
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+        
+        .empty-state p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* Custom Checkbox */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+        
+        .checkbox-container input {
+            width: auto;
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--wd-color);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        /* API Key Info */
+        .api-key-info {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        
+        .api-key-info a {
+            color: var(--wd-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .api-key-info a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Lot Calculator Button */
+        .lot-calculator-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .lot-calculator-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+        
+        /* Recommendation Card on Home */
+        .recommendation-card {
+            margin-top: 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+            border-radius: 18px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .recommendation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), transparent);
+            z-index: -1;
+        }
+        
+        .recommendation-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .recommendation-card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--win-color), #059669);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+        }
+        
+        .recommendation-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .recommendation-card-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .recommendation-card-box {
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .recommendation-card-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .recommendation-card-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--win-color);
+        }
+        
+        .recommendation-card-note {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        /* Journal Form Enhancement */
+        .journal-form {
+            position: relative;
+        }
+        
+        .journal-quick-tips {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+        
+        .journal-quick-tips-title {
+            font-size: 13px;
+            color: var(--ai-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .journal-quick-tips-list {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .journal-quick-tips-list li {
+            margin-bottom: 8px;
+            padding-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tutorial Modal -->
+    <div class="tutorial-modal" id="tutorialModal">
+        <div class="tutorial-content">
+            <div class="tutorial-header">
+                <h1 class="tutorial-title">🎮 Welcome to Pro Trader Journal!</h1>
+                <p class="tutorial-subtitle">Ikuti tutorial singkat untuk memaksimalkan penggunaan aplikasi</p>
+            </div>
+            
+            <!-- Step 1 -->
+            <div class="tutorial-step active" id="step1">
+                <div class="step-content">
+                    <div class="step-icon">📊</div>
+                    <h3 class="step-title">Dashboard Overview</h3>
+                    <p class="step-desc">
+                        Dashboard menampilkan equity, statistik trading, dan live market data. 
+                        Equity card berubah warna sesuai status trading Anda.
+                    </p>
+                    <div class="step-indicators">
+                        <div class="step-indicator active"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                    </div>
+                </div>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn skip" onclick="skipTutorial()">Skip Tutorial</button>
+                    <button class="tutorial-btn next" onclick="nextTutorialStep()">Next</button>
+                </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="tutorial-step" id="step2">
+                <div class="step-content">
+                    <div class="step-icon">📝</div>
+                    <h3 class="step-title">Trade Journal</h3>
+                    <p class="step-desc">
+                        Catat setiap trade dengan detail pair, side, result, dan P&L. 
+                        Gunakan status RUNNING/FLOATING untuk trade yang masih aktif.
+                    </p>
+                    <div class="step-indicators">
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator active"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                    </div>
+                </div>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn skip" onclick="prevTutorialStep()">Back</button>
+                    <button class="tutorial-btn next" onclick="nextTutorialStep()">Next</button>
+                </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="tutorial-step" id="step3">
+                <div class="step-content">
+                    <div class="step-icon">🧠</div>
+                    <h3 class="step-title">Psychology Journal</h3>
+                    <p class="step-desc">
+                        Catat pelajaran, kesalahan, dan analisis trading. 
+                        Ini membantu meningkatkan mindset dan menghindari kesalahan berulang.
+                    </p>
+                    <div class="step-indicators">
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator active"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                    </div>
+                </div>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn skip" onclick="prevTutorialStep()">Back</button>
+                    <button class="tutorial-btn next" onclick="nextTutorialStep()">Next</button>
+                </div>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="tutorial-step" id="step4">
+                <div class="step-content">
+                    <div class="step-icon">🧮</div>
+                    <h3 class="step-title">Lot Calculator</h3>
+                    <p class="step-desc">
+                        Fitur baru! Hitung lot optimal berdasarkan balance, risk per trade, dan stop loss.
+                        Dapatkan rekomendasi lot dan maximal layering.
+                    </p>
+                    <div class="step-indicators">
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator active"></div>
+                        <div class="step-indicator"></div>
+                    </div>
+                </div>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn skip" onclick="prevTutorialStep()">Back</button>
+                    <button class="tutorial-btn next" onclick="nextTutorialStep()">Next</button>
+                </div>
+            </div>
+            
+            <!-- Step 5 -->
+            <div class="tutorial-step" id="step5">
+                <div class="step-content">
+                    <div class="step-icon">🤖</div>
+                    <h3 class="step-title">AI Assistant</h3>
+                    <p class="step-desc">
+                        Dapatkan analisis dan saran dari AI untuk trading Anda.
+                        Tanya apapun tentang trading, psikologi, atau strategi.
+                    </p>
+                    <div class="step-indicators">
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator"></div>
+                        <div class="step-indicator active"></div>
+                    </div>
+                </div>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn skip" onclick="prevTutorialStep()">Back</button>
+                    <button class="tutorial-btn finish" onclick="finishTutorial()">Start Trading!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Lot Calculator Modal -->
+    <div class="lot-calculator-modal" id="lotCalculatorModal">
+        <div class="lot-calculator-content">
+            <div class="lot-calculator-header">
+                <h2 class="lot-calculator-title">Lot Calculator</h2>
+                <button class="close-lot-btn" onclick="closeLotCalculator()">✕</button>
+            </div>
+            
+            <div class="lot-form-group">
+                <label class="lot-label">Account Balance ($)</label>
+                <div class="lot-input-group">
+                    <input type="number" id="calc-balance" class="lot-input" placeholder="5000" min="1" step="0.01">
+                    <span class="lot-input-unit">USD</span>
+                </div>
+                
+                <label class="lot-label">Risk per Trade (%)</label>
+                <div class="lot-input-group">
+                    <input type="number" id="calc-risk" class="lot-input" placeholder="2" min="0.1" max="10" step="0.1">
+                    <span class="lot-input-unit">%</span>
+                </div>
+                
+                <label class="lot-label">Stop Loss (Pips)</label>
+                <div class="lot-input-group">
+                    <input type="number" id="calc-sl" class="lot-input" placeholder="30" min="1" step="1">
+                    <span class="lot-input-unit">Pips</span>
+                </div>
+                
+                <label class="lot-label">Instrument</label>
+                <select id="calc-instrument" class="lot-input" style="margin-bottom: 0;">
+                    <option value="forex">Forex Major (EUR/USD, GBP/USD, etc.)</option>
+                    <option value="forex_minor">Forex Minor/Crossover</option>
+                    <option value="gold">XAU/USD (Gold)</option>
+                    <option value="index">Indices (US30, NAS100, etc.)</option>
+                    <option value="crypto">Cryptocurrency</option>
+                </select>
+            </div>
+            
+            <button class="calculate-btn" onclick="calculateLot()">
+                <i class="fas fa-calculator"></i> Calculate Optimal Lot
+            </button>
+            
+            <div class="result-container" id="lotResultContainer" style="display: none;">
+                <h3 class="result-title">Recommendation</h3>
+                <div class="lot-result">
+                    <div class="lot-result-item">
+                        <span class="lot-result-label">Optimal Lot Size</span>
+                        <span class="lot-result-value" id="result-lot">0.01</span>
+                    </div>
+                    <div class="lot-result-item">
+                        <span class="lot-result-label">Risk Amount</span>
+                        <span class="lot-result-value" id="result-risk">$10</span>
+                    </div>
+                    <div class="lot-result-item">
+                        <span class="lot-result-label">Max Layering</span>
+                        <span class="lot-result-value" id="result-layering">3</span>
+                    </div>
+                </div>
+                
+                <div class="lot-recommendation">
+                    <h4 class="lot-recommendation-title">📊 Trading Recommendation</h4>
+                    <p class="lot-recommendation-text" id="recommendation-text">
+                        Based on your balance and risk profile, we recommend starting with 0.01 lot size.
+                        Max layering: 3 positions to manage risk effectively.
+                    </p>
+                </div>
+            </div>
+            
+            <p class="lot-warning">
+                <i class="fas fa-exclamation-triangle"></i> This is a recommendation. Always adjust based on your risk tolerance and market conditions.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Recommendation Popup -->
+    <div class="recommendation-popup" id="recommendationPopup">
+        <div class="recommendation-header">
+            <div class="recommendation-icon">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="recommendation-title">Trading Recommendation</div>
+            <button class="close-recommendation" onclick="closeRecommendation()">✕</button>
+        </div>
+        <div class="recommendation-content">
+            <div class="recommendation-box">
+                <div class="recommendation-label">Rekomendasi Lot Anda</div>
+                <div class="recommendation-value" id="popup-lot">0.01</div>
+                <div class="recommendation-note">Optimal untuk risk management</div>
+            </div>
+            <div class="recommendation-box">
+                <div class="recommendation-label">Maximal Layering</div>
+                <div class="recommendation-value" id="popup-layering">3</div>
+                <div class="recommendation-note">Maksimal posisi bersamaan</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="overlay"></div>
+    
+    <header>
+        <div class="header-text">
+            <small>Trading Performance</small>
+            <h2 id="display-name">Trader Kece</h2>
+        </div>
+        <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" id="header-avatar" class="user-avatar" onclick="openSettings()">
+    </header>
+
+    <div id="home" class="section active">
+        <!-- Equity Card -->
+        <div class="equity-card" id="equityCard">
+            <div class="equity-edit" onclick="editEquity()">✏️</div>
+            <div class="equity-content">
+                <div class="equity-label">Current Equity (Net)</div>
+                <div class="equity-amount">$ <span id="home-balance">0</span></div>
+                <div id="floating-balance" style="font-size: 13px; margin-top: 8px; opacity: 0.9; display: none;"></div>
+                <div class="equity-info">
+                    <div class="equity-growth" id="home-growth">Growth: 0%</div>
+                    <span id="balance-status-indicator" class="balance-status"></span>
+                </div>
+                <div id="balance-breakdown" class="balance-breakdown" style="display: none;"></div>
+                <div id="active-trades-info" style="font-size: 12px; margin-top: 12px; opacity: 0.9;"></div>
+            </div>
+        </div>
+
+        <!-- Recommendation Card (akan muncul setelah kalkulasi lot) -->
+        <div class="recommendation-card" id="recommendationCard" style="display: none;">
+            <div class="recommendation-card-header">
+                <div class="recommendation-card-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <div class="recommendation-card-title">Trading Recommendation</div>
+            </div>
+            <div class="recommendation-card-content">
+                <div class="recommendation-card-box">
+                    <div class="recommendation-card-label">Rekomendasi Lot Anda</div>
+                    <div class="recommendation-card-value" id="card-lot">0.01</div>
+                    <div class="recommendation-card-note">Optimal lot size</div>
+                </div>
+                <div class="recommendation-card-box">
+                    <div class="recommendation-card-label">Maximal Layering</div>
+                    <div class="recommendation-card-value" id="card-layering">3</div>
+                    <div class="recommendation-card-note">Maksimal posisi bersamaan</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Market Section -->
+        <div class="live-market-section">
+            <div class="live-market-header">
+                <span class="live-dot"></span>
+                <span>Live Market - TradingView</span>
+                <button class="refresh-btn" onclick="refreshMarketPrices()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+
+            <div class="live-price-scroll">
+                <div class="price-card">
+                    <small>XAUUSD</small>
+                    <strong class="up" id="xau-price">
+                        <span class="spinner"></span>
+                        <span class="price-loading">Loading...</span>
+                    </strong> 
+                </div>
+                <div class="price-card">
+                    <small>BTCUSD</small>
+                    <strong class="up" id="btc-price">
+                        <span class="spinner"></span>
+                        <span class="price-loading">Loading...</span>
+                    </strong> 
+                </div>
+                <div class="price-card">
+                    <small>US30 (Dow)</small>
+                    <strong class="up" id="us30-price">
+                        <span class="spinner"></span>
+                        <span class="price-loading">Loading...</span>
+                    </strong>
+                </div>
+                <div class="price-card">
+                    <small>NAS100</small>
+                    <strong class="up" id="nas100-price">
+                        <span class="spinner"></span>
+                        <span class="price-loading">Loading...</span>
+                    </strong>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <span class="label-small"><i class="fas fa-chart-area"></i> Equity Curve</span>
+            <div class="chart-container"><canvas id="equityChart"></canvas></div>
+            <div class="card" id="advanced-stats" style="display:none;">
+                <span class="label-small"><i class="fas fa-microscope"></i> Deep Analysis</span>
+                <div id="pair-stats" style="font-size: 13px; margin-top:10px;"></div>
+                <hr style="opacity:0.1; margin:12px 0;">
+                <div id="time-stats" style="font-size: 13px;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+                <small style="color: var(--text-tertiary);">Total Trades:</small>
+                <strong id="total-trades" style="color: var(--accent-color); font-size: 18px;">0</strong>
+            </div>
+        </div>
+        
+        <div class="stat-grid" style="margin-top: 16px;">
+            <div class="stat-box">
+                <span class="label-small">Win Rate</span>
+                <div id="stat-wr" style="font-weight: 700; color: var(--win-color); font-size: 20px;">0%</div>
+            </div>
+            <div class="stat-box">
+                <span class="label-small">Days Active</span>
+                <div id="stat-days" style="font-weight: 700; font-size: 20px;">0 Days</div>
+            </div>
+            <div class="stat-box">
+                <span class="label-small">Running</span>
+                <div id="stat-running" style="font-weight: 700; color: var(--running-color); font-size: 20px;">0</div>
+            </div>
+            <div class="stat-box">
+                <span class="label-small">Floating</span>
+                <div id="stat-floating" style="font-weight: 700; color: var(--floating-color); font-size: 20px;">0</div>
+            </div>
+        </div>
+        
+        <div class="card" style="margin-top: 16px;">
+            <span class="label-small"><i class="fas fa-robot"></i> AI Psychology Insights</span>
+            <div id="ai-insight" class="ai-msg">AI: Psikologi mantap! Mulai catat trade lo.</div>
+        </div>
+        
+        <h4><i class="fas fa-money-bill-wave"></i> Recent Withdrawals</h4>
+        <div id="wd-summary-list" class="card"></div>
+    </div>
+
+    <div id="trading" class="section">
+        <h3>Trade Journal</h3>
+        <div class="card">
+            <input type="text" id="pair" placeholder="Pair (ex: BTC/USDT)">
+            
+            <div class="form-group">
+                <select id="side">
+                    <option value="BUY">BUY</option>
+                    <option value="SELL">SELL</option>
+                </select>
+                <select id="result">
+                    <option value="running">RUNNING</option>
+                    <option value="floating">FLOATING</option>
+                    <option value="win">WIN (+)</option>
+                    <option value="loss">LOSS (-)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <input type="number" id="pnl" placeholder="Final P&L ($)" step="0.01">
+                <input type="number" id="rr" placeholder="RR Ratio" step="0.1">
+            </div>
+            
+            <!-- Running/Floating Current P&L -->
+            <div id="current-pnl-container" style="display: none;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <div style="flex: 1;">
+                        <small style="color: var(--text-tertiary);">Current Floating P&L ($)</small>
+                        <input type="number" id="current-pnl" class="current-pnl-input" placeholder="Contoh: -150 (negatif untuk floating)" step="0.01">
+                    </div>
+                    <button onclick="updateCurrentPnl()" class="pnl-update-btn" style="height: 48px;">
+                        <i class="fas fa-sync-alt"></i> Update
+                    </button>
+                </div>
+                <small class="timestamp" id="current-pnl-timestamp">Last updated: -</small>
+                <small style="color: var(--text-tertiary); display: block; margin-top: 8px; font-size: 11px;">
+                    <i class="fas fa-info-circle"></i> Nilai NEGATIF untuk floating loss
+                </small>
+            </div>
+            
+            <label class="label-small">Feeling Entry:</label>
+            <select id="emotion">
+                <option value="Tenang">🧘 Tenang / Disiplin</option>
+                <option value="Takut">😨 Takut / Ragu</option>
+                <option value="FOMO">🚀 FOMO / Buru-buru</option>
+                <option value="Marah">😡 Marah / Revenge Trade</option>
+            </select>
+            
+            <input type="text" id="screenshot" placeholder="Link Gambar Chart (opsional)">
+            <label class="label-small">Atau Upload Gambar:</label>
+            <input type="file" id="trade-screenshot" accept="image/*" style="padding: 12px;">
+            
+            <!-- Lot Recommendation Button -->
+            <button class="lot-calculator-btn" onclick="openLotCalculator()">
+                <i class="fas fa-calculator"></i> Kalkulator Lot & Layering
+            </button>
+            
+            <button class="btn-primary" onclick="addTrade()">Submit Trade</button>
+            <button class="btn-primary" onclick="addWithdrawal()" style="background: linear-gradient(135deg, var(--wd-color), #2563eb); margin-top:12px;">Withdrawal</button>
+        </div>
+        <h4>Trade History</h4>
+        <div id="trade-list"></div>
+    </div>
+    
+    <div id="journal" class="section">
+        <h3><i class="fas fa-book"></i> Personal Journal</h3>
+        <div class="card journal-form">
+            <label class="label-small">Kategori:</label>
+            <select id="journal-category">
+                <option value="mistake">❌ Kesalahan</option>
+                <option value="lesson">✅ Pelajaran</option>
+                <option value="analysis">📊 Analisis</option>
+                <option value="note">📝 Catatan</option>
+            </select>
+            <input type="text" id="journal-title" placeholder="Judul (opsional)">
+            <textarea id="journal-content" placeholder="Tulis jurnal lo di sini... Apa yang salah? Apa yang dipelajari? Analisis trade, dll."></textarea>
+            
+            <div class="journal-quick-tips">
+                <div class="journal-quick-tips-title">
+                    <i class="fas fa-lightbulb"></i> Quick Tips
+                </div>
+                <ul class="journal-quick-tips-list">
+                    <li>Catat EMOSI saat entry dan exit trade</li>
+                    <li>Analisis mengapa trade tersebut profit/loss</li>
+                    <li>Note pattern yang berhasil/berulang</li>
+                    <li>Review journal mingguan untuk improvement</li>
+                </ul>
+            </div>
+            
+            <button class="btn-primary" onclick="addJournal()"><i class="fas fa-plus"></i> Tambah Journal Entry</button>
+        </div>
+        <h4>Entries</h4>
+        <div id="journal-list"></div>
+    </div>
+
+    <div id="saving" class="section">
+        <h3>Dream Goals</h3>
+        <div class="card">
+            <input type="text" id="itemName" placeholder="Nama Barang">
+            <input type="text" id="itemImage" placeholder="URL Gambar">
+            <input type="number" id="itemPrice" placeholder="Harga ($)">
+            <button class="btn-primary" onclick="addItem()">Tambah Target</button>
+        </div>
+        <div id="dream-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;"></div>
+    </div>
+
+    <div id="settings" class="section">
+        <h3>Settings</h3>
+        <div class="card">
+            <input type="text" id="input-name" placeholder="Nama">
+            <input type="number" id="input-capital" placeholder="Modal Awal ($)">
+            
+            <!-- Lot Calculator Settings -->
+            <div style="margin-top: 20px;">
+                <label class="label-small"><i class="fas fa-calculator"></i> Lot Calculator Defaults</label>
+                <div class="form-group" style="margin-top: 10px;">
+                    <div>
+                        <small style="color: var(--text-tertiary);">Default Risk (%)</small>
+                        <input type="number" id="default-risk" placeholder="2" min="0.1" max="10" step="0.1" style="margin-bottom: 8px;">
+                    </div>
+                    <div>
+                        <small style="color: var(--text-tertiary);">Default SL (Pips)</small>
+                        <input type="number" id="default-sl" placeholder="30" min="1" step="1" style="margin-bottom: 8px;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tutorial Toggle -->
+            <div style="margin-top: 20px;">
+                <label class="label-small"><i class="fas fa-graduation-cap"></i> Tutorial Settings</label>
+                <div class="checkbox-container" style="margin-top: 10px;">
+                    <input type="checkbox" id="tutorial-toggle" checked>
+                    <label for="tutorial-toggle" style="color: var(--text-secondary); font-size: 13px;">
+                        Tampilkan tutorial saat pertama kali (akan mati otomatis setelah 1x menyimpan data)
+                    </label>
+                </div>
+                <button onclick="resetTutorial()" class="btn-primary" style="background: rgba(255,255,255,0.1); margin-top: 12px;">
+                    <i class="fas fa-redo"></i> Reset Tutorial
+                </button>
+            </div>
+            
+            <div style="text-align: left; margin-top: 20px;">
+                <label class="label-small">Wallpaper Galeri</label>
+                <input type="file" id="bg-input" accept="image/*" onchange="previewBg(event)" style="display:none;">
+                <button onclick="document.getElementById('bg-input').click()" class="btn-primary" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fas fa-image"></i> Pilih Wallpaper
+                </button>
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 20px; border-top: 1px dashed rgba(255,255,255,0.1);">
+                <a href="https://wa.me/+62812-9935-4986?text=Halo%20Bre!%20Mau%20kasih%20saran%20buat%20update%20Pro%20Trader%20Journal%20nih..." 
+                   target="_blank" 
+                   style="text-decoration: none; display: inline-block; width: 100%;">
+                    <button class="btn-primary" style="background: #25d366;">
+                        <i class="fab fa-whatsapp" style="font-size: 20px;"></i> Chat Admin
+                    </button>
+                </a>
+                <p style="font-size: 12px; color: var(--text-tertiary); margin: 10px auto 0 auto; line-height: 1.4; text-align: center;">
+                    Mau kasih saran/ide buat update bagian apa? <br>Chat admin ☝️😏
+                </p>
+            </div>
+
+            <div class="card" style="border: 2px dashed var(--accent-color); margin-top: 20px; background: rgba(99, 102, 241, 0.05);">
+                <span class="label-small">Backup & Recovery</span>
+                <div class="form-group" style="margin-top: 12px;">
+                    <button onclick="exportData()" class="btn-primary" style="background: rgba(255,255,255,0.1); padding: 12px;">
+                        <i class="fas fa-download"></i> Export JSON
+                    </button>
+                    <button onclick="document.getElementById('import-file').click()" class="btn-primary" style="background: rgba(255,255,255,0.1); padding: 12px;">
+                        <i class="fas fa-upload"></i> Import Data
+                    </button>
+                </div>
+                <input type="file" id="import-file" style="display:none" onchange="importData(event)">
+                <p style="font-size: 11px; color: var(--text-tertiary); margin-top: 12px; text-align: center;">Gunakan file ini untuk pindah HP/Browser.</p>
+            </div>
+
+            <button class="btn-primary" onclick="saveProfile()">Simpan Perubahan</button>
+            <button onclick="clearAllData()" style="background:none; border:none; color:var(--loss-color); font-size:12px; margin-top:20px; cursor:pointer; padding: 8px 0;">Reset Semua Data</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2 class="settings-title">Profile Settings</h2>
+                <button class="close-modal-btn" id="closeModalBtn">✕</button>
+            </div>
+
+            <div class="setting-group">
+                <label class="setting-label">Profile Picture</label>
+                <div class="current-profile">
+                    <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" id="modal-profile-pic" class="current-profile-pic">
+                    <div>
+                        <div style="font-size: 18px; font-weight: 700; margin-bottom: 4px;" id="modal-name">Trader</div>
+                        <div style="font-size: 13px; color: var(--text-tertiary);">Click below to change</div>
+                    </div>
+                </div>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📸</div>
+                    <div class="upload-text">Click to upload new photo</div>
+                    <input type="file" class="upload-input" id="uploadInput" accept="image/*">
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <label class="setting-label">Card Gradient Colors</label>
+                <div class="color-picker-group">
+                    <div class="color-picker-item">
+                        <label>Color 1</label>
+                        <input type="color" id="color-accent-1" value="#6366f1">
+                    </div>
+                    <div class="color-picker-item">
+                        <label>Color 2</label>
+                        <input type="color" id="color-accent-2" value="#8b5cf6">
+                    </div>
+                </div>
+                <div class="gradient-preview" id="gradientPreview"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Trade Modal -->
+    <div class="edit-trade-modal" id="editTradeModal">
+        <div class="edit-trade-content">
+            <div class="edit-trade-header">
+                <h3 class="edit-trade-title">Edit Running/Floating Trade</h3>
+                <button class="close-edit-btn" onclick="closeEditModal()">✕</button>
+            </div>
+            <input type="hidden" id="edit-trade-id">
+            
+            <div class="card" id="edit-status-card" style="margin-bottom: 16px;">
+                <small id="edit-status-text" style="font-weight: 600;">
+                    <i class="fas fa-info-circle"></i> Update status trade yang masih berjalan
+                </small>
+            </div>
+            
+            <input type="text" id="edit-pair" placeholder="Pair" readonly>
+            
+            <div class="form-group">
+                <select id="edit-side">
+                    <option value="BUY">BUY</option>
+                    <option value="SELL">SELL</option>
+                </select>
+                <select id="edit-result">
+                    <option value="running">RUNNING</option>
+                    <option value="floating">FLOATING</option>
+                    <option value="win">WIN (+)</option>
+                    <option value="loss">LOSS (-)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <input type="number" id="edit-final-pnl" placeholder="Final P&L ($)" step="0.01">
+                <input type="number" id="edit-rr" placeholder="RR Ratio" step="0.1">
+            </div>
+            
+            <div id="edit-current-pnl-container" style="margin-bottom: 12px;">
+                <small style="color: var(--text-tertiary);">Current Floating P&L ($):</small>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <input type="number" id="edit-current-pnl" class="current-pnl-input" placeholder="Contoh: -150" step="0.01" style="flex: 1;">
+                    <button onclick="updateCurrentPnlInEdit()" class="pnl-update-btn" style="height: 48px;">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <small class="timestamp" id="edit-current-pnl-timestamp">Last updated: -</small>
+            </div>
+            
+            <select id="edit-emotion">
+                <option value="Tenang">🧘 Tenang / Disiplin</option>
+                <option value="Takut">😨 Takut / Ragu</option>
+                <option value="FOMO">🚀 FOMO / Buru-buru</option>
+                <option value="Marah">😡 Marah / Revenge Trade</option>
+            </select>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <button onclick="updateTrade()" class="btn-primary">
+                    <i class="fas fa-save"></i> Update
+                </button>
+                <button onclick="closeEditModal()" style="padding: 16px; background: rgba(255,255,255,0.1); border: none; color: white; border-radius: 12px; cursor: pointer; font-weight: 600;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot Modal -->
+    <div class="ai-chatbot-modal" id="aiChatbotModal">
+        <div class="ai-chatbot-content">
+            <div class="ai-chatbot-header">
+                <div class="ai-chatbot-title">
+                    <i class="fas fa-robot"></i>
+                    <span>Trading AI Assistant</span>
+                </div>
+                <button class="close-ai-btn" onclick="closeAIChatbot()">✕</button>
+            </div>
+            
+            <div class="ai-chatbot-body" id="ai-chat-body">
+                <!-- Welcome Message -->
+                <div class="ai-message ai-message-bot">
+                    <strong>🤖 AI Trader Assistant:</strong><br>
+                    Hai trader! Aku siap bantu lo analisis trading, atur emosi, atau diskusi strategi. Mau bahas apa?
+                    
+                    <div class="ai-preset-buttons">
+                        <button class="ai-preset-btn" onclick="sendPresetMessage('Cara atur emosi saat floating loss?')">
+                            😰 Atur Emosi Floating
+                        </button>
+                        <button class="ai-preset-btn" onclick="sendPresetMessage('Analisis trade history saya')">
+                            📊 Analisis Trade Saya
+                        </button>
+                        <button class="ai-preset-btn" onclick="sendPresetMessage('Strategi RR yang optimal?')">
+                            ⚖️ Strategi RR Optimal
+                        </button>
+                        <button class="ai-preset-btn" onclick="sendPresetMessage('Cara improve win rate?')">
+                            📈 Improve Win Rate
+                        </button>
+                    </div>
+                    
+                    <!-- AI Model Selection -->
+                    <div style="margin-top: 16px;">
+                        <small style="display: block; margin-bottom: 8px; color: var(--text-tertiary);">
+                            <i class="fas fa-microchip"></i> Pilih AI Model:
+                        </small>
+                        <div class="ai-model-selector" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                            <button class="ai-model-btn active" onclick="selectAIModel('deepseek')" id="btn-deepseek">
+                                🔍 DeepSeek
+                            </button>
+                            <button class="ai-model-btn" onclick="selectAIModel('gemini')" id="btn-gemini">
+                                🤖 Gemini
+                            </button>
+                            <button class="ai-model-btn" onclick="selectAIModel('openai')" id="btn-openai">
+                                🚀 OpenAI
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- API Key Info -->
+                    <div style="margin-top: 16px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 12px;">
+                        <small style="display: block; margin-bottom: 8px; color: var(--text-tertiary);">
+                            <i class="fas fa-info-circle"></i> Info API Key:
+                        </small>
+                        <div style="font-size: 12px; color: var(--text-secondary);">
+                            <strong>DeepSeek API Key sudah terpasang otomatis!</strong><br>
+                            <small>Untuk model lain, masukkan API key di bawah:</small>
+                        </div>
+                    </div>
+                    
+                    <!-- API Key Input (untuk Gemini/OpenAI) -->
+                    <div style="margin-top: 16px; display: none;" id="api-key-input-container">
+                        <small style="display: block; margin-bottom: 8px; color: var(--text-tertiary);">
+                            <i class="fas fa-key"></i> Masukkan API Key:
+                        </small>
+                        <input type="password" id="ai-api-key" class="api-key-input" placeholder="Masukkan API key untuk Gemini atau OpenAI...">
+                    </div>
+                    
+                    <div class="api-key-info">
+                        <strong><i class="fas fa-lightbulb"></i> Tips:</strong><br>
+                        • <strong>DeepSeek</strong>: Sudah aktif dengan API key default<br>
+                        • <strong>Gemini</strong>: Dapatkan di <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a><br>
+                        • <strong>OpenAI</strong>: Dapatkan di <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a><br>
+                        <small style="display: block; margin-top: 5px;">API key disimpan lokal di browser lo. Aman!</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ai-chatbot-footer">
+                <input type="text" id="ai-user-input" class="ai-input" placeholder="Tanya apapun tentang trading..." onkeydown="handleKeyDown(event)">
+                <button class="ai-send-btn" onclick="sendAIMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot Floating Button -->
+    <div class="ai-chatbot-container">
+        <button class="ai-chatbot-btn" onclick="openAIChatbot()">
+            <i class="fas fa-robot"></i>
+        </button>
+    </div>
+
+    <nav class="nav-container">
+        <button class="nav-btn active" onclick="showTab('home', this)"><i class="fas fa-home"></i></button>
+        <button class="nav-btn" onclick="showTab('trading', this)"><i class="fas fa-chart-line"></i></button>
+        <button class="nav-btn" onclick="showTab('journal', this)"><i class="fas fa-book"></i></button>
+        <button class="nav-btn" onclick="showTab('saving', this)"><i class="fas fa-wallet"></i></button>
+        <button class="nav-btn" onclick="showTab('settings', this)"><i class="fas fa-cog"></i></button>
+    </nav>
+
+    <script>
+        // Data Storage
+        let trades = JSON.parse(localStorage.getItem('trades')) || [];
+        let items = JSON.parse(localStorage.getItem('dreamItems')) || [];
+        let withdrawals = JSON.parse(localStorage.getItem('withdrawals')) || [];
+        let journals = JSON.parse(localStorage.getItem('journals')) || [];
+        let config = JSON.parse(localStorage.getItem('traderConfig')) || { 
+            name: "Trader Kece", 
+            capital: 0, 
+            accent: "#6366f1",
+            accent2: "#8b5cf6",
+            bgData: "", 
+            profilePic: "https://ui-avatars.com/api/?name=User&background=6366f1&color=fff",
+            tutorialCompleted: false,
+            defaultRisk: 2,
+            defaultSL: 30
+        };
+        let myChart;
+        let aiConversation = [];
+        let aiApiKey = localStorage.getItem('aiApiKey') || 'sk-80d01f2e125c4a03b24402d4898e7e24'; // DeepSeek API key default
+        let aiModel = localStorage.getItem('aiModel') || 'deepseek'; // Default ke DeepSeek
+        
+        // Lot Calculator Defaults
+        let lotRecommendations = JSON.parse(localStorage.getItem('lotRecommendations')) || {
+            optimalLot: 0.01,
+            maxLayering: 3,
+            lastUpdated: null
+        };
+        
+        // Tutorial State
+        let tutorialStep = 1;
+        const totalTutorialSteps = 5;
+
+        window.onload = () => {
+            // Check if tutorial should be shown
+            const hasData = trades.length > 0 || journals.length > 0 || withdrawals.length > 0;
+            const showTutorial = !config.tutorialCompleted && !hasData;
+            
+            if (showTutorial) {
+                document.getElementById('tutorialModal').style.display = 'flex';
+            } else {
+                document.getElementById('tutorialModal').style.display = 'none';
+            }
+            
+            // Request notification permission
+            if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+
+            applyTheme(); 
+            loadFields(); 
+            updateUI(); 
+            updateGradientPreview();
+            
+            // Load lot calculator defaults
+            document.getElementById('default-risk').value = config.defaultRisk || 2;
+            document.getElementById('default-sl').value = config.defaultSL || 30;
+            
+            // Check if we should show recommendation card
+            if (lotRecommendations.lastUpdated) {
+                document.getElementById('recommendationCard').style.display = 'block';
+                document.getElementById('card-lot').textContent = lotRecommendations.optimalLot;
+                document.getElementById('card-layering').textContent = lotRecommendations.maxLayering;
+            }
+            
+            // Event listener untuk show/hide running/floating info
+            document.getElementById('result').addEventListener('change', function() {
+                const currentPnlContainer = document.getElementById('current-pnl-container');
+                const isActive = this.value === 'running' || this.value === 'floating';
+                currentPnlContainer.style.display = isActive ? 'block' : 'none';
+                
+                if (isActive) {
+                    document.getElementById('pnl').value = '';
+                    document.getElementById('pnl').placeholder = "Final P&L (isi nanti)";
+                    if (this.value === 'floating') {
+                        document.getElementById('current-pnl').placeholder = "Contoh: -150 (negatif untuk loss)";
+                    } else {
+                        document.getElementById('current-pnl').placeholder = "Contoh: +50 (positif untuk profit)";
+                    }
+                } else {
+                    document.getElementById('pnl').placeholder = "Final P&L Amount ($)";
+                }
+            });
+
+            // Event listener untuk upload gambar profil
+            document.getElementById('uploadInput').addEventListener('change', handleProfilePicUpload);
+            
+            // Event listener untuk warna
+            document.getElementById('color-accent-1').addEventListener('input', function() {
+                updateGradientPreview();
+                config.accent = this.value;
+                localStorage.setItem('traderConfig', JSON.stringify(config));
+                applyTheme();
+                updateUI();
+            });
+
+            document.getElementById('color-accent-2').addEventListener('input', function() {
+                updateGradientPreview();
+                config.accent2 = this.value;
+                localStorage.setItem('traderConfig', JSON.stringify(config));
+                applyTheme();
+                updateUI();
+            });
+            
+            // Inisialisasi harga market
+            refreshMarketPrices();
+            
+            // Jalankan reminder
+            setTimeout(checkReminder, 5000);
+            
+            // Inisialisasi AI Chatbot
+            initializeAIChatbot();
+            
+            // Close modal saat klik di luar
+            document.getElementById('settingsModal').addEventListener('click', (e) => {
+                if (e.target.id === 'settingsModal') {
+                    document.getElementById('settingsModal').classList.remove('active');
+                }
+            });
+            
+            // Close edit modal saat klik di luar
+            document.getElementById('editTradeModal').addEventListener('click', (e) => {
+                if (e.target.id === 'editTradeModal') {
+                    closeEditModal();
+                }
+            });
+            
+            // Close AI modal saat klik di luar
+            document.getElementById('aiChatbotModal').addEventListener('click', (e) => {
+                if (e.target.id === 'aiChatbotModal') {
+                    closeAIChatbot();
+                }
+            });
+            
+            // Close lot calculator modal saat klik di luar
+            document.getElementById('lotCalculatorModal').addEventListener('click', (e) => {
+                if (e.target.id === 'lotCalculatorModal') {
+                    closeLotCalculator();
+                }
+            });
+            
+            // Close tutorial modal saat klik di luar
+            document.getElementById('tutorialModal').addEventListener('click', (e) => {
+                if (e.target.id === 'tutorialModal') {
+                    skipTutorial();
+                }
+            });
+            
+            // Close recommendation popup saat klik di luar
+            document.getElementById('recommendationPopup').addEventListener('click', (e) => {
+                if (e.target.id === 'recommendationPopup') {
+                    closeRecommendation();
+                }
+            });
+            
+            // Close modal dengan ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeAIChatbot();
+                    closeEditModal();
+                    closeLotCalculator();
+                    document.getElementById('settingsModal').classList.remove('active');
+                    closeRecommendation();
+                }
+            });
+        };
+
+        // ========== TUTORIAL FUNCTIONS ==========
+        function nextTutorialStep() {
+            if (tutorialStep < totalTutorialSteps) {
+                document.getElementById(`step${tutorialStep}`).classList.remove('active');
+                tutorialStep++;
+                document.getElementById(`step${tutorialStep}`).classList.add('active');
+                
+                // Update indicators
+                updateTutorialIndicators();
+            }
+        }
+        
+        function prevTutorialStep() {
+            if (tutorialStep > 1) {
+                document.getElementById(`step${tutorialStep}`).classList.remove('active');
+                tutorialStep--;
+                document.getElementById(`step${tutorialStep}`).classList.add('active');
+                
+                // Update indicators
+                updateTutorialIndicators();
+            }
+        }
+        
+        function updateTutorialIndicators() {
+            const indicators = document.querySelectorAll('.step-indicator');
+            indicators.forEach((indicator, index) => {
+                if (index === tutorialStep - 1) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+        
+        function skipTutorial() {
+            config.tutorialCompleted = true;
+            localStorage.setItem('traderConfig', JSON.stringify(config));
+            document.getElementById('tutorialModal').style.display = 'none';
+        }
+        
+        function finishTutorial() {
+            config.tutorialCompleted = true;
+            localStorage.setItem('traderConfig', JSON.stringify(config));
+            document.getElementById('tutorialModal').style.display = 'none';
+            alert("🎉 Tutorial selesai! Mulai catat trading journey lo!");
+        }
+        
+        function resetTutorial() {
+            config.tutorialCompleted = false;
+            localStorage.setItem('traderConfig', JSON.stringify(config));
+            alert("Tutorial telah direset. Halaman akan direfresh...");
+            location.reload();
+        }
+        
+        // ========== LOT CALCULATOR FUNCTIONS ==========
+        function openLotCalculator() {
+            document.getElementById('lotCalculatorModal').classList.add('active');
+            
+            // Set default values
+            const balance = parseFloat(document.getElementById('home-balance').innerText.replace(/,/g, '')) || config.capital || 1000;
+            document.getElementById('calc-balance').value = balance;
+            document.getElementById('calc-risk').value = config.defaultRisk || 2;
+            document.getElementById('calc-sl').value = config.defaultSL || 30;
+            
+            // Hide previous results
+            document.getElementById('lotResultContainer').style.display = 'none';
+        }
+        
+        function closeLotCalculator() {
+            document.getElementById('lotCalculatorModal').classList.remove('active');
+        }
+        
+        function calculateLot() {
+            const balance = parseFloat(document.getElementById('calc-balance').value);
+            const riskPercent = parseFloat(document.getElementById('calc-risk').value);
+            const stopLoss = parseFloat(document.getElementById('calc-sl').value);
+            const instrument = document.getElementById('calc-instrument').value;
+            
+            if (!balance || !riskPercent || !stopLoss) {
+                alert("Harap isi semua field!");
+                return;
+            }
+            
+            if (balance <= 0 || riskPercent <= 0 || stopLoss <= 0) {
+                alert("Nilai harus lebih dari 0!");
+                return;
+            }
+            
+            // Calculate risk amount
+            const riskAmount = (balance * riskPercent) / 100;
+            
+            // Calculate optimal lot based on instrument type
+            let pipValuePerLot = 10; // Default for forex majors
+            
+            switch(instrument) {
+                case 'forex':
+                    pipValuePerLot = 10; // Standard lot
+                    break;
+                case 'forex_minor':
+                    pipValuePerLot = 10; // Standard lot
+                    break;
+                case 'gold':
+                    pipValuePerLot = 10; // XAU/USD
+                    break;
+                case 'index':
+                    pipValuePerLot = 1; // Indices
+                    break;
+                case 'crypto':
+                    pipValuePerLot = 1; // Crypto (simplified)
+                    break;
+            }
+            
+            // Calculate optimal lot size
+            const optimalLot = riskAmount / (stopLoss * pipValuePerLot);
+            
+            // Round to nearest standard lot size (0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, etc.)
+            let roundedLot = Math.max(0.01, Math.round(optimalLot * 100) / 100);
+            
+            // Ensure it's a standard lot size
+            const standardLots = [0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10];
+            let finalLot = 0.01;
+            
+            for (let i = 0; i < standardLots.length; i++) {
+                if (roundedLot >= standardLots[i]) {
+                    finalLot = standardLots[i];
+                } else {
+                    break;
+                }
+            }
+            
+            // Calculate maximal layering based on balance and risk
+            let maxLayering = 3; // Default
+            
+            if (balance < 1000) {
+                maxLayering = 2;
+            } else if (balance >= 1000 && balance < 5000) {
+                maxLayering = 3;
+            } else if (balance >= 5000 && balance < 20000) {
+                maxLayering = 4;
+            } else {
+                maxLayering = 5;
+            }
+            
+            // Adjust based on instrument
+            if (instrument === 'crypto') {
+                maxLayering = Math.min(2, maxLayering); // Crypto lebih risky
+            }
+            
+            // Update UI
+            document.getElementById('result-lot').textContent = finalLot.toFixed(2);
+            document.getElementById('result-risk').textContent = `$${riskAmount.toFixed(2)}`;
+            document.getElementById('result-layering').textContent = maxLayering;
+            
+            // Generate recommendation text
+            let recommendationText = '';
+            if (finalLot <= 0.05) {
+                recommendationText = `Balance $${balance.toLocaleString()} dengan risk ${riskPercent}% per trade. Start dengan ${finalLot.toFixed(2)} lot untuk risk management yang aman.`;
+            } else if (finalLot <= 0.2) {
+                recommendationText = `Balance $${balance.toLocaleString()} cukup solid! ${finalLot.toFixed(2)} lot size optimal dengan max ${maxLayering} posisi bersamaan.`;
+            } else {
+                recommendationText = `Balance $${balance.toLocaleString()} besar! ${finalLot.toFixed(2)} lot size bisa profitable dengan disiplin stop loss.`;
+            }
+            
+            recommendationText += ` Max layering: ${maxLayering} posisi untuk manage risk.`;
+            
+            document.getElementById('recommendation-text').textContent = recommendationText;
+            
+            // Show results
+            document.getElementById('lotResultContainer').style.display = 'block';
+            
+            // Save recommendations
+            lotRecommendations = {
+                optimalLot: finalLot,
+                maxLayering: maxLayering,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('lotRecommendations', JSON.stringify(lotRecommendations));
+            
+            // Update recommendation card on home
+            document.getElementById('recommendationCard').style.display = 'block';
+            document.getElementById('card-lot').textContent = finalLot.toFixed(2);
+            document.getElementById('card-layering').textContent = maxLayering;
+            
+            // Show popup recommendation
+            showRecommendationPopup(finalLot, maxLayering);
+            
+            // Save defaults if changed
+            if (config.defaultRisk !== riskPercent) {
+                config.defaultRisk = riskPercent;
+            }
+            if (config.defaultSL !== stopLoss) {
+                config.defaultSL = stopLoss;
+            }
+            localStorage.setItem('traderConfig', JSON.stringify(config));
+        }
+        
+        function showRecommendationPopup(lot, layering) {
+            document.getElementById('popup-lot').textContent = lot.toFixed(2);
+            document.getElementById('popup-layering').textContent = layering;
+            document.getElementById('recommendationPopup').classList.add('active');
+            
+            // Auto hide after 8 seconds
+            setTimeout(() => {
+                closeRecommendation();
+            }, 8000);
+        }
+        
+        function closeRecommendation() {
+            document.getElementById('recommendationPopup').classList.remove('active');
+        }
+
+        function handleProfilePicUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    config.profilePic = event.target.result;
+                    document.getElementById('modal-profile-pic').src = event.target.result;
+                    document.getElementById('header-avatar').src = event.target.result;
+                    localStorage.setItem('traderConfig', JSON.stringify(config));
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function showTab(tabName, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            btn.classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function applyTheme() {
+            document.documentElement.style.setProperty('--accent-color', config.accent);
+            document.documentElement.style.setProperty('--accent-color-2', config.accent2);
+            document.body.style.backgroundImage = config.bgData ? `url('${config.bgData}')` : 'none';
+            document.getElementById('header-avatar').src = config.profilePic;
+            document.getElementById('modal-profile-pic').src = config.profilePic;
+            document.getElementById('display-name').innerText = config.name;
+            document.getElementById('modal-name').innerText = config.name;
+        }
+
+        function updateGradientPreview() {
+            const color1 = document.getElementById('color-accent-1').value;
+            const color2 = document.getElementById('color-accent-2').value;
+            document.getElementById('gradientPreview').style.background = `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`;
+        }
+
+        // Settings Modal Functions
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+            document.getElementById('color-accent-1').value = config.accent;
+            document.getElementById('color-accent-2').value = config.accent2;
+            updateGradientPreview();
+        }
+
+        document.getElementById('closeModalBtn').addEventListener('click', () => {
+            document.getElementById('settingsModal').classList.remove('active');
+        });
+
+        function previewBg(event) {
+            const reader = new FileReader();
+            reader.onload = () => { 
+                config.bgData = reader.result; 
+                document.body.style.backgroundImage = `url('${reader.result}')`; 
+                localStorage.setItem('traderConfig', JSON.stringify(config));
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function saveProfile() {
+            config.name = document.getElementById('input-name').value || config.name;
+            config.capital = parseFloat(document.getElementById('input-capital').value) || config.capital;
+            
+            // Save lot calculator defaults
+            const defaultRisk = parseFloat(document.getElementById('default-risk').value);
+            const defaultSL = parseFloat(document.getElementById('default-sl').value);
+            
+            if (defaultRisk && defaultRisk > 0 && defaultRisk <= 10) {
+                config.defaultRisk = defaultRisk;
+            }
+            
+            if (defaultSL && defaultSL > 0) {
+                config.defaultSL = defaultSL;
+            }
+            
+            // Mark tutorial as completed if user saves data
+            if (!config.tutorialCompleted) {
+                config.tutorialCompleted = true;
+            }
+            
+            localStorage.setItem('traderConfig', JSON.stringify(config));
+            applyTheme(); 
+            updateUI(); 
+            alert("Profile saved!");
+        }
+
+        function loadFields() {
+            document.getElementById('input-name').value = config.name;
+            document.getElementById('input-capital').value = config.capital;
+        }
+
+        function addTrade() {
+            const pair = document.getElementById('pair').value;
+            const finalPnl = parseFloat(document.getElementById('pnl').value) || 0;
+            const result = document.getElementById('result').value;
+            
+            if(!pair) {
+                alert("Isi pair dulu!");
+                return;
+            }
+            
+            let screenshotData = document.getElementById('screenshot').value;
+            const fileInput = document.getElementById('trade-screenshot');
+            
+            if(fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    screenshotData = e.target.result;
+                    saveTrade(pair, finalPnl, result, screenshotData);
+                    fileInput.value = '';
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                saveTrade(pair, finalPnl, result, screenshotData);
+            }
+        }
+        
+        function saveTrade(pair, finalPnl, result, screenshotData) {
+            let currentPnl = document.getElementById('current-pnl').value;
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            
+            // Convert currentPnl to number
+            currentPnl = currentPnl ? parseFloat(currentPnl) : 0;
+            
+            const newTrade = {
+                id: Date.now(), 
+                pair: pair.toUpperCase(), 
+                side: document.getElementById('side').value, 
+                result: result,
+                pnl: finalPnl,
+                currentPnl: currentPnl,
+                currentPnlTimestamp: timestamp,
+                rr: document.getElementById('rr').value || "0", 
+                emotion: document.getElementById('emotion').value, 
+                ss: screenshotData, 
+                date: now.toISOString(),
+                isActive: (result === 'running' || result === 'floating')
+            };
+            
+            trades.unshift(newTrade);
+            localStorage.setItem('trades', JSON.stringify(trades));
+            updateUI();
+            
+            // Mark tutorial as completed if this is the first data saved
+            if (!config.tutorialCompleted) {
+                config.tutorialCompleted = true;
+                localStorage.setItem('traderConfig', JSON.stringify(config));
+            }
+            
+            // Reset form
+            ['pair','pnl','rr','screenshot','current-pnl'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('result').value = 'running';
+            document.getElementById('current-pnl-container').style.display = 'block';
+            document.getElementById('pnl').placeholder = "Final P&L (isi nanti)";
+            
+            // Notifikasi jika running/floating trade
+            if((result === 'running' || result === 'floating') && Notification.permission === "granted") {
+                new Notification("Pro Trader Journal", {
+                    body: `Trade ${pair} ditambahkan sebagai ${result.toUpperCase()}. Jangan lupa update P&L!`,
+                    icon: "https://cdn-icons-png.flaticon.com/512/3112/3112946.png"
+                });
+            }
+        }
+
+        function updateCurrentPnl() {
+            let currentPnl = document.getElementById('current-pnl').value.trim();
+            if(!currentPnl) {
+                alert("Isi current P&L dulu!");
+                return;
+            }
+            
+            currentPnl = parseFloat(currentPnl);
+            if(isNaN(currentPnl)) {
+                alert("P&L harus angka!");
+                return;
+            }
+            
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            document.getElementById('current-pnl-timestamp').innerText = `Last updated: ${timestamp}`;
+            
+            // Simpan ke localStorage untuk temporary storage
+            localStorage.setItem('tempCurrentPnl', currentPnl);
+            localStorage.setItem('tempCurrentPnlTimestamp', timestamp);
+            
+            // Tambahkan efek visual
+            const pnlInput = document.getElementById('current-pnl');
+            pnlInput.style.borderColor = currentPnl >= 0 ? 'var(--running-color)' : 'var(--floating-color)';
+            pnlInput.style.color = currentPnl >= 0 ? 'var(--running-color)' : 'var(--floating-color)';
+            
+            setTimeout(() => {
+                pnlInput.style.borderColor = '';
+                pnlInput.style.color = '';
+            }, 1000);
+        }
+
+        function updateCurrentPnlInEdit() {
+            let currentPnl = document.getElementById('edit-current-pnl').value.trim();
+            if(!currentPnl) {
+                alert("Isi current P&L dulu!");
+                return;
+            }
+            
+            currentPnl = parseFloat(currentPnl);
+            if(isNaN(currentPnl)) {
+                alert("P&L harus angka!");
+                return;
+            }
+            
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            document.getElementById('edit-current-pnl-timestamp').innerText = `Last updated: ${timestamp}`;
+            
+            // Simpan ke temporary variable untuk digunakan saat update trade
+            window.currentPnlEdit = {
+                value: currentPnl,
+                timestamp: timestamp
+            };
+            
+            // Tambahkan efek visual
+            const pnlInput = document.getElementById('edit-current-pnl');
+            pnlInput.style.borderColor = currentPnl >= 0 ? 'var(--running-color)' : 'var(--floating-color)';
+            pnlInput.style.color = currentPnl >= 0 ? 'var(--running-color)' : 'var(--floating-color)';
+            
+            setTimeout(() => {
+                pnlInput.style.borderColor = '';
+                pnlInput.style.color = '';
+            }, 1000);
+        }
+
+        // Edit Trade Functions
+        function editTrade(id) {
+            const trade = trades.find(t => t.id === id);
+            if(!trade) return;
+            
+            document.getElementById('edit-trade-id').value = id;
+            document.getElementById('edit-pair').value = trade.pair;
+            document.getElementById('edit-side').value = trade.side;
+            document.getElementById('edit-result').value = trade.result;
+            document.getElementById('edit-final-pnl').value = trade.pnl;
+            document.getElementById('edit-rr').value = trade.rr;
+            document.getElementById('edit-emotion').value = trade.emotion;
+            document.getElementById('edit-current-pnl').value = trade.currentPnl || '';
+            document.getElementById('edit-current-pnl-timestamp').innerText = trade.currentPnlTimestamp ? 
+                `Last updated: ${trade.currentPnlTimestamp}` : 'Last updated: -';
+            
+            // Update modal styling based on status
+            const editStatusCard = document.getElementById('edit-status-card');
+            const editStatusText = document.getElementById('edit-status-text');
+            
+            if (trade.result === 'running') {
+                editStatusCard.style.background = 'rgba(16, 185, 129, 0.1)';
+                editStatusCard.style.border = '1px solid var(--running-color)';
+                editStatusText.style.color = 'var(--running-color)';
+                editStatusText.innerHTML = '<i class="fas fa-info-circle"></i> Trade sedang RUNNING (Hijau)';
+            } else if (trade.result === 'floating') {
+                editStatusCard.style.background = 'rgba(239, 68, 68, 0.1)';
+                editStatusCard.style.border = '1px solid var(--floating-color)';
+                editStatusText.style.color = 'var(--floating-color)';
+                editStatusText.innerHTML = '<i class="fas fa-info-circle"></i> Trade sedang FLOATING (Merah)';
+            }
+            
+            // Show/hide current P&L based on status
+            const isActive = trade.result === 'running' || trade.result === 'floating';
+            document.getElementById('edit-current-pnl-container').style.display = isActive ? 'block' : 'none';
+            
+            document.getElementById('editTradeModal').classList.add('active');
+            window.currentPnlEdit = null;
+        }
+
+        function updateTrade() {
+            const id = parseInt(document.getElementById('edit-trade-id').value);
+            const tradeIndex = trades.findIndex(t => t.id === id);
+            
+            if(tradeIndex === -1) return;
+            
+            const newResult = document.getElementById('edit-result').value;
+            const finalPnl = parseFloat(document.getElementById('edit-final-pnl').value) || 0;
+            
+            // Update trade data
+            trades[tradeIndex] = {
+                ...trades[tradeIndex],
+                side: document.getElementById('edit-side').value,
+                result: newResult,
+                pnl: finalPnl,
+                rr: document.getElementById('edit-rr').value || "0",
+                emotion: document.getElementById('edit-emotion').value,
+                isActive: (newResult === 'running' || newResult === 'floating')
+            };
+            
+            // Update current P&L if available
+            if (window.currentPnlEdit) {
+                trades[tradeIndex].currentPnl = window.currentPnlEdit.value;
+                trades[tradeIndex].currentPnlTimestamp = window.currentPnlEdit.timestamp;
+            } else if (document.getElementById('edit-current-pnl').value.trim()) {
+                trades[tradeIndex].currentPnl = parseFloat(document.getElementById('edit-current-pnl').value.trim());
+                if (!trades[tradeIndex].currentPnlTimestamp) {
+                    trades[tradeIndex].currentPnlTimestamp = new Date().toLocaleTimeString('id-ID', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                }
+            }
+            
+            // Jika trade selesai (win/loss), hapus current P&L
+            if (newResult === 'win' || newResult === 'loss') {
+                delete trades[tradeIndex].currentPnl;
+                delete trades[tradeIndex].currentPnlTimestamp;
+            }
+            
+            localStorage.setItem('trades', JSON.stringify(trades));
+            updateUI();
+            closeEditModal();
+            
+            // Notifikasi jika trade selesai
+            if((newResult === 'win' || newResult === 'loss') && Notification.permission === "granted") {
+                new Notification("Trade Selesai!", {
+                    body: `Trade ${trades[tradeIndex].pair} telah selesai sebagai ${newResult.toUpperCase()} dengan P&L $${finalPnl}`,
+                    icon: "https://cdn-icons-png.flaticon.com/512/3112/3112946.png"
+                });
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editTradeModal').classList.remove('active');
+            window.currentPnlEdit = null;
+        }
+
+        function deleteTrade(id) { 
+            if(confirm("Hapus trade ini?")) { 
+                trades = trades.filter(t => t.id !== id); 
+                localStorage.setItem('trades', JSON.stringify(trades)); 
+                updateUI(); 
+            } 
+        }
+
+        function addWithdrawal() {
+            const amt = parseFloat(prompt("Jumlah WD ($):"));
+            if(!isNaN(amt) && amt > 0) {
+                withdrawals.unshift({ id: Date.now(), amount: amt, date: new Date().toLocaleDateString() });
+                localStorage.setItem('withdrawals', JSON.stringify(withdrawals));
+                updateUI();
+                
+                // Notifikasi
+                if(Notification.permission === "granted") {
+                    new Notification("WD Success!", {
+                        body: `Withdrawal $${amt} telah dicatat. Good job!`,
+                        icon: "https://cdn-icons-png.flaticon.com/512/3112/3112946.png"
+                    });
+                }
+            }
+        }
+
+        function deleteWD(id) {
+            if(confirm("Hapus WD dari history?")) {
+                withdrawals = withdrawals.filter(w => w.id !== id);
+                localStorage.setItem('withdrawals', JSON.stringify(withdrawals));
+                updateUI();
+            }
+        }
+
+        function addJournal() {
+            const category = document.getElementById('journal-category').value;
+            const title = document.getElementById('journal-title').value;
+            const content = document.getElementById('journal-content').value.trim();
+            
+            if(!content) {
+                alert("Isi konten jurnal dulu!");
+                return;
+            }
+            
+            journals.unshift({
+                id: Date.now(),
+                category: category,
+                title: title || getCategoryName(category),
+                content: content,
+                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
+                timestamp: new Date().toISOString()
+            });
+            
+            localStorage.setItem('journals', JSON.stringify(journals));
+            updateUI();
+            
+            // Mark tutorial as completed if this is the first data saved
+            if (!config.tutorialCompleted) {
+                config.tutorialCompleted = true;
+                localStorage.setItem('traderConfig', JSON.stringify(config));
+            }
+            
+            document.getElementById('journal-title').value = '';
+            document.getElementById('journal-content').value = '';
+        }
+
+        function getCategoryName(cat) {
+            const names = {
+                'mistake': 'Kesalahan',
+                'lesson': 'Pelajaran',
+                'analysis': 'Analisis',
+                'note': 'Catatan'
+            };
+            return names[cat] || 'Entry';
+        }
+
+        function deleteJournal(id) {
+            if(confirm("Hapus journal entry ini?")) {
+                journals = journals.filter(j => j.id !== id);
+                localStorage.setItem('journals', JSON.stringify(journals));
+                updateUI();
+            }
+        }
+
+        function renderJournals() {
+            const list = document.getElementById('journal-list');
+            list.innerHTML = '';
+            
+            if(journals.length === 0) {
+                list.innerHTML = '<div class="empty-state"><i class="fas fa-book-open"></i><p>Belum ada journal entry.<br>Mulai catat kesalahan & pelajaran lo!</p></div>';
+                return;
+            }
+            
+            journals.forEach(j => {
+                list.innerHTML += `<div class="card journal-entry">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                        <div>
+                            <span class="journal-category cat-${j.category}">${j.title}</span>
+                            <div style="font-size:11px; color:var(--text-tertiary); margin-top:4px;"><i class="fas fa-calendar-alt"></i> ${j.date}</div>
+                        </div>
+                        <i class="fas fa-trash-alt del-btn" onclick="deleteJournal(${j.id})"></i>
+                    </div>
+                    <div style="font-size:14px; line-height:1.6; color:var(--text-secondary); white-space:pre-wrap;">${j.content}</div>
+                </div>`;
+            });
+        }
+
+        function updateUI() {
+            // Analisis Per Pair
+            let runningCount = 0;
+            let floatingCount = 0;
+            let totalWins = 0;
+            let totalLosses = 0;
+            let totalWinAmount = 0;
+            let totalLossAmount = 0;
+            
+            // Calculate floating loss and running profit
+            let totalFloatingLoss = 0;
+            let totalRunningProfit = 0;
+            
+            if (trades.length > 0) {
+                document.getElementById('advanced-stats').style.display = 'block';
+                let pairData = {};
+                let dayData = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
+
+                trades.forEach(t => {
+                    // Hitung per Pair
+                    if (!pairData[t.pair]) pairData[t.pair] = { win: 0, total: 0, running: 0, floating: 0 };
+                    pairData[t.pair].total++;
+                    if (t.result === 'win') pairData[t.pair].win++;
+                    if (t.result === 'running') pairData[t.pair].running++;
+                    if (t.result === 'floating') pairData[t.pair].floating++;
+
+                    // Hitung per Hari
+                    let day = new Date(t.date).getDay();
+                    if (t.result === 'win') dayData[day]++;
+
+                    // Hitung running & floating trades
+                    if (t.result === 'running') {
+                        runningCount++;
+                        if (t.currentPnl) {
+                            totalRunningProfit += parseFloat(t.currentPnl);
+                        }
+                    }
+                    if (t.result === 'floating') {
+                        floatingCount++;
+                        if (t.currentPnl) {
+                            totalFloatingLoss += parseFloat(t.currentPnl);
+                        }
+                    }
+
+                    // Hitung untuk profit factor
+                    if (t.result === 'win') {
+                        totalWins++;
+                        totalWinAmount += parseFloat(t.pnl);
+                    } else if (t.result === 'loss') {
+                        totalLosses++;
+                        totalLossAmount += parseFloat(t.pnl);
+                    }
+                });
+
+                // Tampilkan Best Pair
+                const closedPairs = Object.keys(pairData).filter(p => pairData[p].running === 0 && pairData[p].floating === 0);
+                if (closedPairs.length > 0) {
+                    let bestPair = closedPairs.reduce((a, b) => (pairData[a].win / pairData[a].total) > (pairData[b].win / pairData[b].total) ? a : b);
+                    let wrPair = Math.round((pairData[bestPair].win / pairData[bestPair].total) * 100);
+                    document.getElementById('pair-stats').innerHTML = `🔥 Best Pair: <b>${bestPair}</b> (WR: ${wrPair}%)`;
+                }
+
+                // Tampilkan Best Day
+                const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+                let bestDayIdx = Object.keys(dayData).reduce((a, b) => dayData[a] > dayData[b] ? a : b);
+                document.getElementById('time-stats').innerHTML = `📅 Best Day: <b>${days[bestDayIdx]}</b> (Most Wins)`;
+
+            } else {
+                document.getElementById('advanced-stats').style.display = 'none';
+            }
+
+            // Update counters
+            document.getElementById('stat-running').innerText = runningCount;
+            document.getElementById('stat-floating').innerText = floatingCount;
+
+            let totalProfit = 0, winCount = 0, totalLossVal = 0;
+            let emotionLoss = { FOMO: 0, Takut: 0, Marah: 0, Tenang: 0 };
+            let equityHistory = [config.capital];
+            
+            const list = document.getElementById('trade-list'); 
+            list.innerHTML = '';
+            
+            const sortedTrades = [...trades].reverse();
+            let currentEq = config.capital;
+            sortedTrades.forEach(t => {
+                if(t.result !== 'running' && t.result !== 'floating') {
+                    currentEq += (t.result === 'win' ? parseFloat(t.pnl) : -parseFloat(t.pnl));
+                }
+                equityHistory.push(currentEq);
+            });
+
+            trades.forEach(t => {
+                const val = parseFloat(t.pnl);
+                if(t.result === 'win') { 
+                    totalProfit += val; 
+                    winCount++; 
+                } else if(t.result === 'loss') { 
+                    totalProfit -= val; 
+                    totalLossVal += val; 
+                    emotionLoss[t.emotion]++; 
+                }
+                
+                const screenshotHtml = t.ss ? `<img src="${t.ss}" class="vault-img">` : '';
+                const badgeClass = t.result === 'running' ? 'running-badge' : 
+                                  t.result === 'floating' ? 'floating-badge' : '';
+                const badgeText = t.result === 'running' ? 'RUNNING' : 
+                                 t.result === 'floating' ? 'FLOATING' : '';
+                const badge = (t.result === 'running' || t.result === 'floating') ? 
+                    `<span class="${badgeClass}">${badgeText}</span>` : '';
+                
+                // Tampilkan current P&L jika ada
+                const currentPnlDisplay = (t.result === 'running' || t.result === 'floating') && t.currentPnl ? 
+                    `<div style="margin-top: 12px; padding: 12px; background: ${t.result === 'running' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; border-radius: 12px; font-size: 13px;">
+                        <div style="color: ${t.result === 'running' ? 'var(--running-color)' : 'var(--floating-color)'}; font-weight: 600;">
+                            <i class="fas fa-chart-line"></i> Floating P&L: <strong>$${t.currentPnl}</strong>
+                        </div>
+                        ${t.currentPnlTimestamp ? 
+                            `<div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">
+                                <i class="far fa-clock"></i> ${t.currentPnlTimestamp}
+                            </div>` : ''
+                        }
+                    </div>` : '';
+                
+                const pnlDisplay = t.result === 'running' || t.result === 'floating' ? 
+                    'ACTIVE' : 
+                    `${t.result === 'win' ? '+' : '-'}$${Math.abs(val)}`;
+                
+                const borderColor = t.result === 'running' ? 'var(--running-color)' : 
+                                   t.result === 'floating' ? 'var(--floating-color)' : 
+                                   (t.result === 'win' ? 'var(--win-color)' : 'var(--loss-color)');
+                
+                list.innerHTML += `<div class="card" style="border-left: 4px solid ${borderColor}">
+                    <div class="history-item">
+                        <div>
+                            <strong style="color:${t.side==='BUY'?'var(--win-color)':'var(--loss-color)'}">${t.side}</strong> 
+                            <strong>${t.pair}</strong> ${badge}<br>
+                            <small style="color:var(--text-tertiary);">RR: ${t.rr} | ${t.emotion}</small>
+                        </div>
+                        <div style="display:flex; align-items:center;">
+                            <span style="color:${t.result==='running'?'var(--running-color)':(t.result==='floating'?'var(--floating-color)':(t.result==='win'?'var(--win-color)':'var(--loss-color)'))}; font-weight:700; margin-right:12px;">
+                                ${pnlDisplay}
+                            </span>
+                            ${t.result === 'running' || t.result === 'floating' ? 
+                                `<i class="fas fa-edit edit-btn" onclick="editTrade(${t.id})" title="Edit Trade"></i>` : 
+                                ''
+                            }
+                            <i class="fas fa-trash-alt del-btn" onclick="deleteTrade(${t.id})" title="Delete Trade"></i>
+                        </div>
+                    </div>
+                    ${currentPnlDisplay}
+                    ${screenshotHtml}
+                </div>`;
+            });
+
+            if (trades.length === 0) {
+                list.innerHTML = '<div class="empty-state"><i class="fas fa-chart-line"></i><p>Belum ada trade yang dicatat.<br>Mulai catat trade pertama lo!</p></div>';
+            }
+
+            const wdList = document.getElementById('wd-summary-list');
+            wdList.innerHTML = '';
+            withdrawals.forEach(w => {
+                wdList.innerHTML += `<div class="wd-item">
+                    <span><small style="color:var(--text-tertiary);">${w.date}</small> - <strong style="color:var(--wd-color);">$${w.amount}</strong></span>
+                    <i class="fas fa-trash-alt del-btn" onclick="deleteWD(${w.id})"></i>
+                </div>`;
+            });
+            if(withdrawals.length === 0) wdList.innerHTML = '<div class="empty-state"><i class="fas fa-money-bill-wave"></i><p>Belum ada withdrawal.<br>Mulai take profit lo!</p></div>';
+
+            // Calculate final equity (closed trades only)
+            const finalClosedEq = config.capital + totalProfit - withdrawals.reduce((a,c) => a + c.amount, 0);
+            
+            // Calculate floating adjusted balance
+            const floatingAdjustedBalance = finalClosedEq + totalFloatingLoss + totalRunningProfit;
+            
+            // Display balance
+            document.getElementById('home-balance').innerText = finalClosedEq.toLocaleString();
+            const growthPercent = config.capital > 0 ? ((finalClosedEq - config.capital) / config.capital * 100).toFixed(1) : 0;
+            const growthSign = growthPercent >= 0 ? '+' : '';
+            document.getElementById('home-growth').innerText = `Growth: ${growthSign}${growthPercent}%`;
+            document.getElementById('stat-wr').innerText = (trades.length ? Math.round((winCount/trades.length)*100) : 0) + "%";
+            document.getElementById('total-trades').innerText = trades.length;
+            
+            if(trades.length > 0) {
+                const firstTradeDate = new Date(trades[trades.length - 1].date);
+                const today = new Date();
+                const diffTime = Math.abs(today - firstTradeDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('stat-days').innerText = `${diffDays} Day${diffDays !== 1 ? 's' : ''}`;
+            } else {
+                document.getElementById('stat-days').innerText = '0 Days';
+            }
+            
+            // UPDATE FLOATING BALANCE DISPLAY
+            const floatingBalanceDiv = document.getElementById('floating-balance');
+            const balanceBreakdownDiv = document.getElementById('balance-breakdown');
+            
+            if (floatingCount > 0 || runningCount > 0) {
+                floatingBalanceDiv.style.display = 'block';
+                balanceBreakdownDiv.style.display = 'block';
+                
+                let breakdownHTML = '<div class="balance-line">';
+                breakdownHTML += `<span>Balance Closed:</span><span>$${finalClosedEq.toLocaleString()}</span>`;
+                breakdownHTML += '</div>';
+                
+                if (floatingCount > 0 && totalFloatingLoss !== 0) {
+                    breakdownHTML += `<div class="balance-line balance-negative">`;
+                    breakdownHTML += `<span>Floating Loss (${floatingCount}):</span><span>$${totalFloatingLoss.toLocaleString()}</span>`;
+                    breakdownHTML += '</div>';
+                }
+                
+                if (runningCount > 0 && totalRunningProfit !== 0) {
+                    breakdownHTML += `<div class="balance-line balance-positive">`;
+                    breakdownHTML += `<span>Running Profit (${runningCount}):</span><span>+$${totalRunningProfit.toLocaleString()}</span>`;
+                    breakdownHTML += '</div>';
+                }
+                
+                breakdownHTML += `<div class="balance-line" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; margin-top: 8px; font-weight: 700;">`;
+                breakdownHTML += `<span>Floating Adjusted:</span><span>$${floatingAdjustedBalance.toLocaleString()}</span>`;
+                breakdownHTML += '</div>';
+                
+                balanceBreakdownDiv.innerHTML = breakdownHTML;
+                
+                // Update floating balance display
+                const floatingDifference = floatingAdjustedBalance - finalClosedEq;
+                let floatingText = '';
+                
+                if (floatingDifference < 0) {
+                    floatingText = `Balance - Floating: <strong style="color: var(--floating-color);">$${Math.abs(floatingDifference).toLocaleString()}</strong>`;
+                } else if (floatingDifference > 0) {
+                    floatingText = `Balance + Running: <strong style="color: var(--running-color);">+$${floatingDifference.toLocaleString()}</strong>`;
+                } else {
+                    floatingText = `Floating/Running: <strong>$0</strong>`;
+                }
+                
+                floatingBalanceDiv.innerHTML = `<i class="fas fa-calculator"></i> ${floatingText}`;
+            } else {
+                floatingBalanceDiv.style.display = 'none';
+                balanceBreakdownDiv.style.display = 'none';
+            }
+            
+            // UPDATE EQUITY CARD COLOR BASED ON TRADE STATUS
+            const equityCard = document.getElementById('equityCard');
+            const balanceStatusIndicator = document.getElementById('balance-status-indicator');
+            const activeTradesInfo = document.getElementById('active-trades-info');
+            
+            // Reset all classes
+            equityCard.classList.remove('running', 'floating', 'mixed');
+            balanceStatusIndicator.innerHTML = '';
+            balanceStatusIndicator.className = 'balance-status';
+            
+            if (runningCount > 0 && floatingCount === 0) {
+                equityCard.classList.add('running');
+                balanceStatusIndicator.classList.add('balance-running');
+                balanceStatusIndicator.innerHTML = `<span class="balance-dot dot-running"></span> ${runningCount} RUNNING`;
+                activeTradesInfo.innerHTML = `<i class="fas fa-chart-line" style="color: var(--running-color);"></i> Balance HIJAU: ${runningCount} trade RUNNING (+$${totalRunningProfit})`;
+                
+            } else if (floatingCount > 0 && runningCount === 0) {
+                equityCard.classList.add('floating');
+                balanceStatusIndicator.classList.add('balance-floating');
+                balanceStatusIndicator.innerHTML = `<span class="balance-dot dot-floating"></span> ${floatingCount} FLOATING`;
+                activeTradesInfo.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: var(--floating-color);"></i> Balance MERAH: ${floatingCount} trade FLOATING ($${totalFloatingLoss})`;
+                
+            } else if (runningCount > 0 && floatingCount > 0) {
+                equityCard.classList.add('mixed');
+                balanceStatusIndicator.classList.add('balance-mixed');
+                balanceStatusIndicator.innerHTML = `<span class="balance-dot" style="background: linear-gradient(45deg, var(--running-color) 50%, var(--floating-color) 50%);"></span> ${runningCount}R + ${floatingCount}F`;
+                activeTradesInfo.innerHTML = `<i class="fas fa-random" style="color: #f59e0b;"></i> Balance ORANGE: ${runningCount}R + ${floatingCount}F (Net: $${(totalRunningProfit + totalFloatingLoss).toLocaleString()})`;
+                
+            } else {
+                activeTradesInfo.innerHTML = `<i class="fas fa-check-circle" style="color: var(--win-color);"></i> Tidak ada trade aktif`;
+            }
+            
+            let worst = Object.keys(emotionLoss).reduce((a, b) => emotionLoss[a] > emotionLoss[b] ? a : b);
+            
+            let aiMessage = "Mulai catat trade lo.";
+            if(trades.length >= 3) {
+                if(runningCount > 0 || floatingCount > 0) {
+                    const activeCount = runningCount + floatingCount;
+                    const netFloating = totalRunningProfit + totalFloatingLoss;
+                    let floatingStatus = netFloating >= 0 ? "profit" : "loss";
+                    aiMessage = `AI: Ada <strong>${activeCount} trade</strong> aktif. Floating adjusted: <strong>$${Math.abs(netFloating).toLocaleString()} ${floatingStatus}</strong>`;
+                } else if(emotionLoss[worst] > 0) {
+                    aiMessage = `AI: Loss terbanyak pas lagi <strong>${worst}</strong>. Control emosi lo!`;
+                } else {
+                    aiMessage = "AI: Psikologi mantap!";
+                }
+            }
+            document.getElementById('ai-insight').innerHTML = aiMessage;
+
+            renderChart(equityHistory);
+            renderItems(finalClosedEq);
+            renderJournals();
+        }
+
+        function renderChart(data) {
+            const ctx = document.getElementById('equityChart').getContext('2d');
+            if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, { 
+                type: 'line', 
+                data: { 
+                    labels: data.map((_, i) => i), 
+                    datasets: [{ 
+                        label: 'Equity', 
+                        data: data, 
+                        borderColor: config.accent, 
+                        backgroundColor: `${config.accent}20`, 
+                        borderWidth: 3, 
+                        tension: 0.3, 
+                        fill: true, 
+                        pointRadius: 0 
+                    }] 
+                }, 
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { 
+                        legend: { display: false } 
+                    }, 
+                    scales: { 
+                        x: { display: false }, 
+                        y: { 
+                            grid: { color: 'rgba(255,255,255,0.05)' }, 
+                            ticks: { 
+                                color: 'var(--text-tertiary)', 
+                                font: { size: 11 } 
+                            } 
+                        } 
+                    } 
+                } 
+            });
+        }
+
+        function editEquity() {
+            const newCapital = prompt("Edit Modal Awal ($):", config.capital);
+            if(newCapital !== null && !isNaN(parseFloat(newCapital))) {
+                config.capital = parseFloat(newCapital);
+                localStorage.setItem('traderConfig', JSON.stringify(config));
+                updateUI();
+            }
+        }
+
+        function addItem() {
+            const name = document.getElementById('itemName').value, 
+                  price = parseFloat(document.getElementById('itemPrice').value);
+            if(!name || isNaN(price)) return alert("Isi nama dan harga!");
+            items.unshift({ 
+                id: Date.now(), 
+                name, 
+                img: document.getElementById('itemImage').value, 
+                price 
+            });
+            localStorage.setItem('dreamItems', JSON.stringify(items));
+            updateUI();
+            
+            // Mark tutorial as completed if this is the first data saved
+            if (!config.tutorialCompleted) {
+                config.tutorialCompleted = true;
+                localStorage.setItem('traderConfig', JSON.stringify(config));
+            }
+            
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemImage').value = '';
+            document.getElementById('itemPrice').value = '';
+        }
+
+        function renderItems(equity) {
+            const list = document.getElementById('dream-list'); 
+            list.innerHTML = '';
+            items.forEach(i => {
+                const p = Math.min(Math.max((equity / i.price) * 100, 0), 100);
+                list.innerHTML += `<div class="card" style="padding:0; overflow:hidden; position:relative;">
+                    <i class="fas fa-times-circle" onclick="deleteItem(${i.id})" style="position:absolute; top:8px; right:8px; z-index:10; cursor:pointer; color:#fff; background:rgba(0,0,0,0.5); border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px;"></i>
+                    <img src="${i.img || 'https://via.placeholder.com/150'}" style="width:100%; height:140px; object-fit:cover;">
+                    <div style="padding:16px;">
+                        <small style="font-size:12px; color:var(--text-tertiary);">${i.name}</small><br>
+                        <strong style="font-size:18px;">$${i.price.toLocaleString()}</strong>
+                        <div class="progress-container" style="margin-top:12px;">
+                            <div class="progress-bar" style="width:${p}%;"></div>
+                        </div>
+                        <small style="font-size:11px; color:var(--text-tertiary); display:block; margin-top:6px;">${p.toFixed(1)}% achieved</small>
+                    </div>
+                </div>`;
+            });
+            if(items.length === 0) {
+                list.innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-bullseye"></i><p>Belum ada dream goals.<br>Tambahkan target lo!</p></div>';
+            }
+        }
+
+        function deleteItem(id) { 
+            if(confirm("Hapus dream goal ini?")) { 
+                items = items.filter(i => i.id !== id); 
+                localStorage.setItem('dreamItems', JSON.stringify(items)); 
+                updateUI(); 
+            } 
+        }
+        
+        function clearAllData() { 
+            if(confirm("Reset semua data? Ini tidak bisa dibatalkan!")) { 
+                if(confirm("Yakin 100%? Semua trade, journal, dan settings akan hilang!")) {
+                    localStorage.clear(); 
+                    location.reload(); 
+                }
+            } 
+        }
+
+        function exportData() {
+            const data = {
+                trades: JSON.parse(localStorage.getItem('trades')) || [],
+                withdrawals: JSON.parse(localStorage.getItem('withdrawals')) || [],
+                config: JSON.parse(localStorage.getItem('traderConfig')) || {},
+                dreamItems: JSON.parse(localStorage.getItem('dreamItems')) || [],
+                journals: JSON.parse(localStorage.getItem('journals')) || [],
+                aiApiKey: aiApiKey,
+                aiModel: aiModel,
+                lotRecommendations: lotRecommendations
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `jurnal_trader_backup_${new Date().toLocaleDateString().replace(/\//g, '-')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function importData(event) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if(confirm("Timpa data saat ini dengan data dari file backup?")) {
+                        localStorage.setItem('trades', JSON.stringify(data.trades || []));
+                        localStorage.setItem('withdrawals', JSON.stringify(data.withdrawals || []));
+                        localStorage.setItem('traderConfig', JSON.stringify(data.config || {}));
+                        localStorage.setItem('dreamItems', JSON.stringify(data.dreamItems || []));
+                        localStorage.setItem('journals', JSON.stringify(data.journals || []));
+                        if (data.aiApiKey) {
+                            aiApiKey = data.aiApiKey;
+                            localStorage.setItem('aiApiKey', aiApiKey);
+                        }
+                        if (data.aiModel) {
+                            aiModel = data.aiModel;
+                            localStorage.setItem('aiModel', aiModel);
+                        }
+                        if (data.lotRecommendations) {
+                            lotRecommendations = data.lotRecommendations;
+                            localStorage.setItem('lotRecommendations', JSON.stringify(lotRecommendations));
+                        }
+                        alert("Data berhasil dipulihkan!");
+                        location.reload();
+                    }
+                } catch(err) {
+                    alert("File backup tidak valid!");
+                }
+            };
+            reader.readAsText(event.target.files[0]);
+        }
+
+        function checkReminder() {
+            const lastTrade = trades.length > 0 ? new Date(trades[0].date).toLocaleDateString() : null;
+            const today = new Date().toLocaleDateString();
+
+            if (lastTrade !== today && Notification.permission === "granted") {
+                new Notification("Pro Trader Journal", {
+                    body: "Bre, belum ada trade yang dicatat hari ini. Jangan lupa evaluasi ya! ☝️😏",
+                    icon: "https://cdn-icons-png.flaticon.com/512/3112/3112946.png"
+                });
+            }
+            
+            // Check for trades that need P&L update
+            const activeTrades = trades.filter(t => t.result === 'running' || t.result === 'floating');
+            if (activeTrades.length > 0 && Notification.permission === "granted") {
+                setTimeout(() => {
+                    new Notification("Update P&L Running Trade", {
+                        body: `Jangan lupa update P&L untuk ${activeTrades.length} trade yang masih aktif!`,
+                        icon: "https://cdn-icons-png.flaticon.com/512/3112/3112946.png"
+                    });
+                }, 3000);
+            }
+        }
+
+        // ==================== TRADINGVIEW PRICES ====================
+        async function refreshMarketPrices() {
+            try {
+                // Show loading spinners
+                document.querySelectorAll('.spinner').forEach(spinner => {
+                    spinner.style.display = 'inline-block';
+                });
+                document.querySelectorAll('.price-loading').forEach(loading => {
+                    loading.style.display = 'inline';
+                });
+                
+                // Simulate price changes for demo
+                const demoPrices = {
+                    'xau-price': `${(4533.99 + Math.random() * 1 - 3).toFixed(2)}`,
+                    'btc-price': `${(87532.99 + Math.random() * 500 - 250).toFixed(2)}`,
+                    'us30-price': `${(5 + Math.random() * 10 - 5).toFixed(2)}`,
+                    'nas100-price': `${(25644.39 + Math.random() * 10 - 2).toFixed(2)}`
+                };
+                
+                Object.keys(demoPrices).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        const price = demoPrices[id];
+                        const oldPrice = parseFloat(el.innerText.replace(/[^0-9.-]+/g, "")) || parseFloat(price);
+                        el.innerHTML = price;
+                        
+                        // Update color
+                        if (el.oldPrice && price !== el.oldPrice) {
+                            const newPriceNum = parseFloat(price);
+                            const oldPriceNum = parseFloat(el.oldPrice);
+                            
+                            if (newPriceNum > oldPriceNum) {
+                                el.className = "up";
+                                el.classList.add('price-up');
+                                setTimeout(() => el.classList.remove('price-up'), 500);
+                            } else if (newPriceNum < oldPriceNum) {
+                                el.className = "down";
+                                el.classList.add('price-down');
+                                setTimeout(() => el.classList.remove('price-down'), 500);
+                            }
+                        }
+                        
+                        el.oldPrice = price;
+                    }
+                });
+                
+                // Hide loading spinners
+                setTimeout(() => {
+                    document.querySelectorAll('.spinner').forEach(spinner => {
+                        spinner.style.display = 'none';
+                    });
+                    document.querySelectorAll('.price-loading').forEach(loading => {
+                        loading.style.display = 'none';
+                    });
+                }, 1000);
+                
+            } catch (err) {
+                console.log("Market refresh error:", err);
+                
+                // Set fallback prices if API fails
+                const fallbackPrices = {
+                    'xau-price': '4,533,99',
+                    'btc-price': '87,532.99',
+                    'us30-price': 'Did Not Have Data',
+                    'nas100-price': '25,644.39'
+                };
+                
+                Object.keys(fallbackPrices).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.innerHTML = fallbackPrices[id];
+                        el.className = "up";
+                    }
+                });
+                
+                // Hide loading spinners
+                document.querySelectorAll('.spinner').forEach(spinner => {
+                    spinner.style.display = 'none';
+                });
+                document.querySelectorAll('.price-loading').forEach(loading => {
+                    loading.style.display = 'none';
+                });
+            }
+        }
+
+        // ==================== AI CHATBOT FUNCTIONS ====================
+        function openAIChatbot() {
+            document.getElementById('aiChatbotModal').classList.add('active');
+            scrollToBottom();
+            
+            // Focus on input field
+            setTimeout(() => {
+                document.getElementById('ai-user-input').focus();
+            }, 300);
+        }
+
+        function closeAIChatbot() {
+            document.getElementById('aiChatbotModal').classList.remove('active');
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendAIMessage();
+            }
+        }
+
+        function initializeAIChatbot() {
+            // Load conversation history
+            const savedConversation = localStorage.getItem('aiConversation');
+            if (savedConversation) {
+                try {
+                    aiConversation = JSON.parse(savedConversation);
+                    renderConversation();
+                } catch (e) {
+                    console.error('Error loading conversation:', e);
+                    aiConversation = [];
+                }
+            } else {
+                aiConversation = [];
+            }
+            
+            // Load saved AI model
+            const savedModel = localStorage.getItem('aiModel');
+            if (savedModel) {
+                aiModel = savedModel;
+                selectAIModel(savedModel);
+            } else {
+                selectAIModel('deepseek');
+            }
+            
+            // Save API key when changed (only for non-DeepSeek models)
+            document.getElementById('ai-api-key').addEventListener('input', function() {
+                const key = this.value.trim();
+                if (aiModel !== 'deepseek') {
+                    localStorage.setItem('aiApiKey', key);
+                    aiApiKey = key;
+                }
+            });
+        }
+
+        function selectAIModel(model) {
+            aiModel = model;
+            localStorage.setItem('aiModel', model);
+            
+            // Update UI
+            document.querySelectorAll('.ai-model-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${model}`).classList.add('active');
+            
+            // Show/hide API key input
+            const apiKeyContainer = document.getElementById('api-key-input-container');
+            if (model === 'deepseek') {
+                apiKeyContainer.style.display = 'none';
+                document.getElementById('ai-api-key').value = 'sk-80d01f2e125c4a03b24402d4898e7e24';
+                aiApiKey = 'sk-80d01f2e125c4a03b24402d4898e7e24';
+            } else {
+                apiKeyContainer.style.display = 'block';
+                // Load saved API key for this model
+                const savedKey = localStorage.getItem('aiApiKey') || '';
+                document.getElementById('ai-api-key').value = savedKey;
+                aiApiKey = savedKey;
+                
+                // Update placeholder
+                if (model === 'gemini') {
+                    document.getElementById('ai-api-key').placeholder = "AIza... (Google Gemini API Key)";
+                } else if (model === 'openai') {
+                    document.getElementById('ai-api-key').placeholder = "sk-... (OpenAI API Key)";
+                }
+            }
+        }
+
+        function sendAIMessage() {
+            const input = document.getElementById('ai-user-input');
+            const message = input.value.trim();
+            
+            if (!message) {
+                input.focus();
+                return;
+            }
+            
+            // Add user message
+            addMessageToChat('user', message);
+            input.value = '';
+            input.focus();
+            
+            // Check API key (for non-DeepSeek models)
+            if (aiModel !== 'deepseek' && !aiApiKey) {
+                addMessageToChat('bot', `❌ Masukkan API Key ${getModelName(aiModel)} dulu di kolom atas.`);
+                return;
+            }
+            
+            // Show thinking indicator
+            showThinking();
+            
+            // Prepare conversation context
+            const context = prepareAIContext();
+            
+            // Call AI API based on selected model
+            switch(aiModel) {
+                case 'deepseek':
+                    callDeepSeekAPI(message, context);
+                    break;
+                case 'gemini':
+                    callGeminiAPI(message, context);
+                    break;
+                case 'openai':
+                    callOpenAIAPI(message, context);
+                    break;
+                default:
+                    callDeepSeekAPI(message, context);
+            }
+        }
+
+        function getModelName(model) {
+            switch(model) {
+                case 'deepseek': return 'DeepSeek';
+                case 'gemini': return 'Google Gemini';
+                case 'openai': return 'OpenAI';
+                default: return 'AI';
+            }
+        }
+
+        function sendPresetMessage(message) {
+            document.getElementById('ai-user-input').value = message;
+            sendAIMessage();
+        }
+
+        function prepareAIContext() {
+            const runningCount = trades.filter(t => t.result === 'running').length;
+            const floatingCount = trades.filter(t => t.result === 'floating').length;
+            const winCount = trades.filter(t => t.result === 'win').length;
+            const winRate = trades.length > 0 ? Math.round((winCount / trades.length) * 100) : 0;
+            
+            // Calculate emotions
+            const emotions = {};
+            trades.forEach(t => {
+                emotions[t.emotion] = (emotions[t.emotion] || 0) + 1;
+            });
+            
+            const context = {
+                traderStats: {
+                    totalTrades: trades.length,
+                    winRate: winRate,
+                    runningTrades: runningCount,
+                    floatingTrades: floatingCount,
+                    emotions: emotions,
+                    bestPair: getBestPair(),
+                    worstDay: getWorstDay()
+                },
+                recentTrades: trades.slice(0, 5).map(t => ({
+                    pair: t.pair,
+                    result: t.result,
+                    emotion: t.emotion,
+                    pnl: t.pnl,
+                    rr: t.rr
+                })),
+                journals: journals.slice(0, 3).map(j => ({
+                    category: j.category,
+                    content: j.content.substring(0, 100) + '...'
+                })),
+                currentBalance: parseFloat(document.getElementById('home-balance').innerText.replace(/,/g, '')) || 0,
+                floatingStatus: document.getElementById('floating-balance').innerText || 'No active trades'
+            };
+            
+            return context;
+        }
+
+        function getBestPair() {
+            if (trades.length === 0) return 'N/A';
+            const pairStats = {};
+            trades.forEach(t => {
+                if (t.result === 'win') {
+                    pairStats[t.pair] = (pairStats[t.pair] || 0) + 1;
+                }
+            });
+            
+            if (Object.keys(pairStats).length === 0) return 'N/A';
+            
+            const bestPair = Object.keys(pairStats).reduce((a, b) => pairStats[a] > pairStats[b] ? a : b);
+            return bestPair;
+        }
+
+        function getWorstDay() {
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const dayStats = {};
+            trades.forEach(t => {
+                if (t.result === 'loss') {
+                    const day = new Date(t.date).getDay();
+                    dayStats[day] = (dayStats[day] || 0) + 1;
+                }
+            });
+            
+            if (Object.keys(dayStats).length === 0) return 'N/A';
+            
+            const worstDayIdx = Object.keys(dayStats).reduce((a, b) => dayStats[a] > dayStats[b] ? a : b);
+            return days[worstDayIdx];
+        }
+
+        async function callDeepSeekAPI(userMessage, context) {
+            try {
+                const apiUrl = 'https://api.deepseek.com/v1/chat/completions';
+                
+                const systemPrompt = `Kamu adalah asisten trading profesional untuk trader Indonesia.
+                Data trader saat ini:
+                - Total Trades: ${context.traderStats.totalTrades}
+                - Win Rate: ${context.traderStats.winRate}%
+                - Running Trades: ${context.traderStats.runningTrades}
+                - Floating Trades: ${context.traderStats.floatingTrades}
+                - Emosi dominan: ${JSON.stringify(context.traderStats.emotions)}
+                - Balance saat ini: $${context.currentBalance}
+                - Status Floating: ${context.floatingStatus}
+                
+                Berikan analisis trading yang praktis, saran manajemen emosi, dan strategi improvement.
+                Gunakan bahasa Indonesia yang santai dan friendly, tapi tetap profesional.
+                
+                Tugas kamu:
+                1. Analisis pattern trading berdasarkan data di atas
+                2. Berikan saran untuk improve performance
+                3. Bantu atur emosi trading
+                4. Motivasi trader untuk tetap konsisten`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${aiApiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            ...aiConversation.slice(-10).map(msg => ({
+                                role: msg.sender === 'user' ? 'user' : 'assistant',
+                                content: msg.message
+                            })),
+                            { role: "user", content: userMessage }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 500
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`DeepSeek API Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const aiResponse = data.choices[0].message.content;
+                
+                hideThinking();
+                addMessageToChat('bot', aiResponse);
+                saveConversation();
+                
+            } catch (error) {
+                console.error('DeepSeek API Error:', error);
+                hideThinking();
+                
+                // Fallback ke respon lokal
+                const fallbackResponse = generateFallbackResponse(context, userMessage);
+                addMessageToChat('bot', `🤖 [Mode Simulasi - DeepSeek] ${fallbackResponse}`);
+            }
+        }
+
+        async function callGeminiAPI(userMessage, context) {
+            try {
+                // Check if API key is valid
+                if (!aiApiKey.startsWith('AIza')) {
+                    throw new Error('API key Gemini harus dimulai dengan "AIza"');
+                }
+                
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${aiApiKey}`;
+                
+                const prompt = `[Konteks Trader Indonesia]
+                Total Trades: ${context.traderStats.totalTrades}
+                Win Rate: ${context.traderStats.winRate}%
+                Running Trades: ${context.traderStats.runningTrades}
+                Floating Trades: ${context.traderStats.floatingTrades}
+                Emosi dominan: ${JSON.stringify(context.traderStats.emotions)}
+                Balance saat ini: $${context.currentBalance}
+                Status Floating: ${context.floatingStatus}
+                
+                [Tugas Kamu]
+                Kamu adalah asisten trading profesional untuk trader Indonesia.
+                Berikan:
+                1. Analisis berdasarkan data di atas
+                2. Saran praktis untuk improve trading
+                3. Motivasi positif
+                4. Gunakan bahasa Indonesia yang santai tapi profesional
+                
+                [Pertanyaan Trader]
+                ${userMessage}`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.7,
+                            maxOutputTokens: 500
+                        }
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Gemini API Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.candidates || !data.candidates[0]) {
+                    throw new Error('No response from Gemini API');
+                }
+                
+                const aiResponse = data.candidates[0].content.parts[0].text;
+                
+                hideThinking();
+                addMessageToChat('bot', aiResponse);
+                saveConversation();
+                
+            } catch (error) {
+                console.error('Gemini API Error:', error);
+                hideThinking();
+                
+                // Fallback ke DeepSeek
+                addMessageToChat('bot', `❌ Gemini API Error. Mencoba DeepSeek...`);
+                callDeepSeekAPI(userMessage, context);
+            }
+        }
+
+        async function callOpenAIAPI(userMessage, context) {
+            try {
+                // Check if API key is valid
+                if (!aiApiKey.startsWith('sk-')) {
+                    throw new Error('API key OpenAI harus dimulai dengan "sk-"');
+                }
+                
+                const apiUrl = 'https://api.openai.com/v1/chat/completions';
+                
+                const systemPrompt = `Kamu adalah asisten trading profesional untuk trader Indonesia.
+                Data trader saat ini:
+                - Total Trades: ${context.traderStats.totalTrades}
+                - Win Rate: ${context.traderStats.winRate}%
+                - Running Trades: ${context.traderStats.runningTrades}
+                - Floating Trades: ${context.traderStats.floatingTrades}
+                - Emosi dominan: ${JSON.stringify(context.traderStats.emotions)}
+                - Balance: $${context.currentBalance}
+                - Status: ${context.floatingStatus}
+                
+                Berikan saran trading yang praktis, analisis pattern, dan bantu trader menjadi lebih disiplin.
+                Gunakan bahasa Indonesia yang santai tapi profesional.`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${aiApiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            ...aiConversation.slice(-10).map(msg => ({
+                                role: msg.sender === 'user' ? 'user' : 'assistant',
+                                content: msg.message
+                            })),
+                            { role: "user", content: userMessage }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 500
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`OpenAI API Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const aiResponse = data.choices[0].message.content;
+                
+                hideThinking();
+                addMessageToChat('bot', aiResponse);
+                saveConversation();
+                
+            } catch (error) {
+                console.error('OpenAI API Error:', error);
+                hideThinking();
+                
+                // Fallback ke DeepSeek
+                addMessageToChat('bot', `❌ OpenAI API Error. Mencoba DeepSeek...`);
+                callDeepSeekAPI(userMessage, context);
+            }
+        }
+
+        function generateFallbackResponse(context, userMessage) {
+            const responses = [
+                `Berdasarkan data trading lo (${context.traderStats.totalTrades} trades, WR ${context.traderStats.winRate}%), fokus di pair yang konsisten profit. Jangan FOMO!`,
+                `Saya lihat ada ${context.traderStats.runningTrades} running dan ${context.traderStats.floatingTrades} floating trade. Manage risk dengan baik ya!`,
+                `Emosi trading lo perlu diperbaiki. Coba lebih tenang saat entry dan disiplin dengan stop loss.`,
+                `Balance lo sekarang $${context.currentBalance}. Tetap konsisten dan jangan revenge trading!`,
+                `Analisis pattern: Coba review journal trading lo untuk cari pattern yang bekerja.`,
+                `Untuk pertanyaan "${userMessage}", saran saya: tetap disiplin dengan risk management 1-2% per trade.`,
+                `Win rate ${context.traderStats.winRate}% bisa ditingkatkan dengan fokus di setup high probability saja.`,
+                `Jangan takut floating loss. Itu bagian dari trading. Yang penting risk management solid.`
+            ];
+            
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+
+        function addMessageToChat(sender, message) {
+            const chatBody = document.getElementById('ai-chat-body');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `ai-message ai-message-${sender}`;
+            
+            if (sender === 'bot') {
+                messageDiv.innerHTML = `<strong>🤖 AI Trader (${getModelName(aiModel)}):</strong><br>${formatAIMessage(message)}`;
+            } else {
+                messageDiv.innerHTML = `<strong>👤 You:</strong><br>${message}`;
+            }
+            
+            chatBody.appendChild(messageDiv);
+            
+            // Add to conversation history (skip welcome message)
+            if (!message.includes('Hai trader!')) {
+                aiConversation.push({
+                    sender: sender,
+                    message: message,
+                    timestamp: new Date().toISOString(),
+                    model: aiModel
+                });
+                
+                // Save conversation
+                saveConversation();
+            }
+            
+            scrollToBottom();
+        }
+
+        function formatAIMessage(message) {
+            let formatted = message
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/```(.*?)```/gs, '<div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin: 5px 0; font-family: monospace; font-size: 12px;">$1</div>')
+                .replace(/\n/g, '<br>');
+            
+            // Highlight trading terms
+            formatted = formatted.replace(/(BUY|SELL|WIN|LOSS|RUNNING|FLOATING)/gi, '<span style="color: var(--accent-color); font-weight: bold;">$1</span>');
+            formatted = formatted.replace(/(RR|Risk.*Reward|Stop Loss|Take Profit)/gi, '<span style="color: var(--wd-color); font-weight: bold;">$1</span>');
+            
+            return formatted;
+        }
+
+        function showThinking() {
+            const chatBody = document.getElementById('ai-chat-body');
+            const thinkingDiv = document.createElement('div');
+            thinkingDiv.className = 'ai-thinking';
+            thinkingDiv.id = 'ai-thinking-indicator';
+            thinkingDiv.innerHTML = `
+                <div class="ai-dots">
+                    <div class="ai-dot"></div>
+                    <div class="ai-dot"></div>
+                    <div class="ai-dot"></div>
+                </div>
+                <span>AI (${getModelName(aiModel)}) sedang berpikir...</span>
+            `;
+            chatBody.appendChild(thinkingDiv);
+            scrollToBottom();
+        }
+
+        function hideThinking() {
+            const thinkingDiv = document.getElementById('ai-thinking-indicator');
+            if (thinkingDiv) {
+                thinkingDiv.remove();
+            }
+        }
+
+        function saveConversation() {
+            try {
+                localStorage.setItem('aiConversation', JSON.stringify(aiConversation));
+            } catch (e) {
+                console.error('Error saving conversation:', e);
+            }
+        }
+
+        function scrollToBottom() {
+            const chatBody = document.getElementById('ai-chat-body');
+            setTimeout(() => {
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 100);
+        }
+    </script>
+</body>
+</html>
