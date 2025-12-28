@@ -2,7 +2,7 @@
   "Fajar": {
     "password": "Mikis123",
     "createdAt": "2025-12-28T12:07:01.332Z",
-    "accountType": null,
+    "accountType": "cent",
     "data": {
       "trades": [],
       "items": [],
@@ -18,7 +18,7 @@
         "tutorialCompleted": false,
         "defaultRisk": 2,
         "defaultSL": 30,
-        "accountType": null
+        "accountType": "cent"
       },
       "aiConversation": [],
       "lotRecommendations": {
