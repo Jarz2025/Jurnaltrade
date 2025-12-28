@@ -2,7 +2,7 @@
   "Fajar": {
     "password": "Mikis123",
     "createdAt": "2025-12-28T12:07:01.332Z",
-    "accountType": null,
+    "accountType": "cent",
     "data": {
       "trades": [],
       "items": [],
@@ -15,10 +15,10 @@
         "accent2": "#8b5cf6",
         "bgData": "",
         "profilePic": "https://ui-avatars.com/api/?name=Fajar&background=6366f1&color=fff",
-        "tutorialCompleted": false,
+        "tutorialCompleted": true,
         "defaultRisk": 2,
         "defaultSL": 30,
-        "accountType": null
+        "accountType": "cent"
       },
       "aiConversation": [],
       "lotRecommendations": {
