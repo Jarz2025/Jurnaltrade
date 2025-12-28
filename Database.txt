@@ -15,7 +15,7 @@
         "accent2": "#8b5cf6",
         "bgData": "",
         "profilePic": "https://ui-avatars.com/api/?name=Fajar&background=6366f1&color=fff",
-        "tutorialCompleted": false,
+        "tutorialCompleted": true,
         "defaultRisk": 2,
         "defaultSL": 30,
         "accountType": "cent"
