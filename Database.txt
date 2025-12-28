@@ -1,1 +1,31 @@
-
+{
+  "Fajar": {
+    "password": "Mikis123",
+    "createdAt": "2025-12-28T12:07:01.332Z",
+    "accountType": null,
+    "data": {
+      "trades": [],
+      "items": [],
+      "withdrawals": [],
+      "journals": [],
+      "config": {
+        "name": "Fajar",
+        "capital": 0,
+        "accent": "#6366f1",
+        "accent2": "#8b5cf6",
+        "bgData": "",
+        "profilePic": "https://ui-avatars.com/api/?name=Fajar&background=6366f1&color=fff",
+        "tutorialCompleted": false,
+        "defaultRisk": 2,
+        "defaultSL": 30,
+        "accountType": null
+      },
+      "aiConversation": [],
+      "lotRecommendations": {
+        "optimalLot": 0.01,
+        "maxLayering": 3,
+        "lastUpdated": null
+      }
+    }
+  }
+}
