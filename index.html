@@ -179,226 +179,6 @@
             box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
         }
         
-        /* ========== ADMIN PANEL MODAL ========== */
-        .admin-panel-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 10, 15, 0.98);
-            backdrop-filter: blur(15px);
-            z-index: 99999999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .admin-panel-modal.active {
-            display: flex;
-        }
-        
-        .admin-panel-content {
-            background: linear-gradient(135deg, rgba(25, 25, 35, 0.98) 0%, rgba(15, 15, 25, 0.98) 100%);
-            border-radius: 25px;
-            padding: 30px;
-            max-width: 500px;
-            width: 100%;
-            color: white;
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            box-shadow: 0 25px 70px rgba(0,0,0,0.7);
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-        
-        .admin-panel-header {
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-        }
-        
-        .admin-panel-title {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
-        
-        .admin-panel-subtitle {
-            color: var(--text-tertiary);
-            font-size: 14px;
-        }
-        
-        .admin-close-btn {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        
-        .admin-close-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: rotate(90deg);
-        }
-        
-        .admin-section {
-            margin-bottom: 30px;
-            padding-bottom: 25px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .admin-section-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 18px;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .admin-section-title i {
-            color: var(--accent-color);
-        }
-        
-        .market-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .market-control-btn {
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .market-control-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
-        }
-        
-        .market-control-btn.update {
-            background: rgba(16, 185, 129, 0.1);
-            border-color: rgba(16, 185, 129, 0.3);
-        }
-        
-        .market-control-btn.update:hover {
-            background: rgba(16, 185, 129, 0.15);
-        }
-        
-        .market-control-btn.close {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-        
-        .market-control-btn.close:hover {
-            background: rgba(239, 68, 68, 0.15);
-        }
-        
-        .market-control-btn.post {
-            background: rgba(59, 130, 246, 0.1);
-            border-color: rgba(59, 130, 246, 0.3);
-            grid-column: 1 / -1;
-        }
-        
-        .market-control-btn.post:hover {
-            background: rgba(59, 130, 246, 0.15);
-        }
-        
-        .market-control-btn i {
-            font-size: 20px;
-        }
-        
-        .market-status {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 15px;
-        }
-        
-        .market-status-title {
-            font-size: 14px;
-            color: var(--text-tertiary);
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-        
-        .market-status-value {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--win-color);
-        }
-        
-        .market-status-value.closed {
-            color: var(--loss-color);
-        }
-        
-        .admin-input-group {
-            margin-bottom: 18px;
-        }
-        
-        .admin-label {
-            font-size: 13px;
-            color: var(--text-tertiary);
-            margin-bottom: 8px;
-            display: block;
-            font-weight: 600;
-        }
-        
-        .admin-input {
-            width: 100%;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: white;
-            font-size: 15px;
-            outline: none;
-            transition: all 0.2s;
-        }
-        
-        .admin-input:focus {
-            border-color: var(--accent-color);
-            background: rgba(255, 255, 255, 0.08);
-        }
-        
-        .admin-warning {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 20px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-        
         /* ========== TUTORIAL MODAL STYLES ========== */
         .tutorial-modal {
             position: fixed;
@@ -952,26 +732,6 @@
             background: rgba(16, 185, 129, 0.15);
             color: var(--win-color);
             border-color: rgba(16, 185, 129, 0.3);
-        }
-        
-        .admin-btn {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            color: #f59e0b;
-            padding: 6px 12px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .admin-btn:hover {
-            background: rgba(245, 158, 11, 0.2);
-            transform: translateY(-1px);
         }
         
         .header-text {
@@ -2627,100 +2387,6 @@
         </div>
     </div>
     
-    <!-- Admin Panel Modal -->
-    <div class="admin-panel-modal" id="adminPanelModal">
-        <div class="admin-panel-content">
-            <div class="admin-panel-header">
-                <h2 class="admin-panel-title">Admin Panel</h2>
-                <p class="admin-panel-subtitle">Control Panel untuk Market Price & Settings</p>
-                <button class="admin-close-btn" onclick="closeAdminPanel()">✕</button>
-            </div>
-            
-            <div class="admin-section">
-                <div class="admin-section-title">
-                    <i class="fas fa-sliders-h"></i> Market Controls
-                </div>
-                
-                <div class="market-controls">
-                    <button class="market-control-btn update" onclick="updateMarketPrices()">
-                        <i class="fas fa-sync-alt"></i>
-                        <span>Update Prices</span>
-                    </button>
-                    
-                    <button class="market-control-btn close" onclick="toggleMarketClose()">
-                        <i class="fas fa-power-off"></i>
-                        <span>Market Close</span>
-                    </button>
-                    
-                    <button class="market-control-btn post" onclick="postMT5Prices()">
-                        <i class="fas fa-paper-plane"></i>
-                        <span>POST MT5 Prices</span>
-                    </button>
-                </div>
-                
-                <div class="market-status">
-                    <div class="market-status-title">Market Status:</div>
-                    <div class="market-status-value" id="marketStatusDisplay">OPEN</div>
-                </div>
-            </div>
-            
-            <div class="admin-section">
-                <div class="admin-section-title">
-                    <i class="fas fa-edit"></i> Manual Price Settings
-                </div>
-                
-                <div class="admin-input-group">
-                    <label class="admin-label">XAU/USD Price</label>
-                    <input type="number" id="adminXauPrice" class="admin-input" placeholder="4533.99" step="0.01">
-                </div>
-                
-                <div class="admin-input-group">
-                    <label class="admin-label">BTC/USD Price</label>
-                    <input type="number" id="adminBtcPrice" class="admin-input" placeholder="87532.99" step="0.01">
-                </div>
-                
-                <div class="admin-input-group">
-                    <label class="admin-label">US30 Price</label>
-                    <input type="number" id="adminUs30Price" class="admin-input" placeholder="39500.50" step="0.01">
-                </div>
-                
-                <div class="admin-input-group">
-                    <label class="admin-label">NAS100 Price</label>
-                    <input type="number" id="adminNas100Price" class="admin-input" placeholder="25644.39" step="0.01">
-                </div>
-                
-                <button class="btn-primary" onclick="saveManualPrices()" style="margin-top: 10px;">
-                    <i class="fas fa-save"></i> Save Manual Prices
-                </button>
-            </div>
-            
-            <div class="admin-section">
-                <div class="admin-section-title">
-                    <i class="fas fa-cogs"></i> POST Settings
-                </div>
-                
-                <div class="admin-input-group">
-                    <label class="admin-label">POST URL (MT5/MQL5)</label>
-                    <input type="text" id="postUrl" class="admin-input" placeholder="https://your-vps.com/api/prices" value="">
-                </div>
-                
-                <div class="admin-input-group">
-                    <label class="admin-label">API Key</label>
-                    <input type="password" id="apiKey" class="admin-input" placeholder="Your API Key">
-                </div>
-                
-                <div class="admin-warning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <strong>Security Note:</strong> Simpan URL dan API key dengan aman. Data hanya disimpan di browser Anda.
-                </div>
-            </div>
-            
-            <button class="btn-primary" onclick="saveAdminSettings()" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-                <i class="fas fa-save"></i> Save All Settings
-            </button>
-        </div>
-    </div>
-    
     <!-- Tutorial Modal -->
     <div class="tutorial-modal" id="tutorialModal">
         <div class="tutorial-content">
@@ -2950,10 +2616,6 @@
                 <i class="fas fa-wallet"></i>
                 <span>USD ACCOUNT</span>
             </div>
-            <button class="admin-btn" onclick="openAdminLogin()" id="adminBtn" style="display: none;">
-                <i class="fas fa-user-shield"></i>
-                <span>ADMIN</span>
-            </button>
         </div>
         <div class="header-text">
             <small>Trading Performance</small>
@@ -3522,12 +3184,6 @@
             defaultRisk: 2,
             defaultSL: 30,
             accountType: 'usd', // 'usd' or 'cent'
-            adminSettings: {
-                marketClosed: false,
-                postUrl: '',
-                apiKey: '',
-                manualPrices: {}
-            }
         };
         let myChart;
         let aiConversation = [];
@@ -3546,7 +3202,6 @@
         const totalTutorialSteps = 5;
         
         // Admin State
-        let isAdmin = false;
         let selectedAccountType = 'usd';
 
         window.onload = () => {
@@ -3693,13 +3348,6 @@
                 }
             });
             
-            // Close admin modal saat klik di luar
-            document.getElementById('adminPanelModal').addEventListener('click', (e) => {
-                if (e.target.id === 'adminPanelModal') {
-                    closeAdminPanel();
-                }
-            });
-            
             // Close modal dengan ESC key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
@@ -3708,12 +3356,8 @@
                     closeLotCalculator();
                     document.getElementById('settingsModal').classList.remove('active');
                     closeRecommendation();
-                    closeAdminPanel();
                 }
             });
-            
-            // Setup admin button
-            setupAdminButton();
             
             // Auto update market prices every hour
             setInterval(refreshMarketPrices, 60 * 60 * 1000); // 1 jam
@@ -3825,204 +3469,6 @@
             }
         }
         
-        // ========== ADMIN PANEL FUNCTIONS ==========
-        function setupAdminButton() {
-            // Check if admin credentials are stored
-            const adminCredentials = localStorage.getItem('adminCredentials');
-            if (adminCredentials) {
-                document.getElementById('adminBtn').style.display = 'inline-flex';
-            }
-        }
-        
-        function openAdminLogin() {
-            const username = prompt("Admin Username:");
-            const password = prompt("Admin Password:");
-            
-            if (username === 'y' && password === '001') {
-                isAdmin = true;
-                localStorage.setItem('adminCredentials', btoa('y:001'));
-                document.getElementById('adminPanelModal').classList.add('active');
-                loadAdminSettings();
-            } else {
-                alert("Invalid admin credentials!");
-            }
-        }
-        
-        function closeAdminPanel() {
-            document.getElementById('adminPanelModal').classList.remove('active');
-            isAdmin = false;
-        }
-        
-        function loadAdminSettings() {
-            const adminSettings = config.adminSettings || {};
-            
-            // Load market status
-            const marketClosed = adminSettings.marketClosed || false;
-            document.getElementById('marketStatusDisplay').textContent = marketClosed ? 'CLOSED' : 'OPEN';
-            document.getElementById('marketStatusDisplay').classList.toggle('closed', marketClosed);
-            
-            // Load manual prices
-            const manualPrices = adminSettings.manualPrices || {};
-            document.getElementById('adminXauPrice').value = manualPrices.xau || '';
-            document.getElementById('adminBtcPrice').value = manualPrices.btc || '';
-            document.getElementById('adminUs30Price').value = manualPrices.us30 || '';
-            document.getElementById('adminNas100Price').value = manualPrices.nas100 || '';
-            
-            // Load POST settings
-            document.getElementById('postUrl').value = adminSettings.postUrl || '';
-            document.getElementById('apiKey').value = adminSettings.apiKey || '';
-        }
-        
-        function saveAdminSettings() {
-            const adminSettings = config.adminSettings || {};
-            
-            // Save manual prices
-            adminSettings.manualPrices = {
-                xau: document.getElementById('adminXauPrice').value,
-                btc: document.getElementById('adminBtcPrice').value,
-                us30: document.getElementById('adminUs30Price').value,
-                nas100: document.getElementById('adminNas100Price').value
-            };
-            
-            // Save POST settings
-            adminSettings.postUrl = document.getElementById('postUrl').value;
-            adminSettings.apiKey = document.getElementById('apiKey').value;
-            
-            config.adminSettings = adminSettings;
-            localStorage.setItem('traderConfig', JSON.stringify(config));
-            
-            alert("Admin settings saved!");
-        }
-        
-        function updateMarketPrices() {
-            const manualPrices = config.adminSettings?.manualPrices;
-            
-            if (manualPrices && Object.keys(manualPrices).length > 0) {
-                // Use manual prices
-                if (manualPrices.xau) {
-                    updatePriceDisplay('xau-price', parseFloat(manualPrices.xau));
-                }
-                if (manualPrices.btc) {
-                    updatePriceDisplay('btc-price', parseFloat(manualPrices.btc));
-                }
-                if (manualPrices.us30) {
-                    updatePriceDisplay('us30-price', parseFloat(manualPrices.us30));
-                }
-                if (manualPrices.nas100) {
-                    updatePriceDisplay('nas100-price', parseFloat(manualPrices.nas100));
-                }
-                
-                alert("Market prices updated from manual settings!");
-            } else {
-                // Refresh from API
-                refreshMarketPrices();
-            }
-        }
-        
-        function toggleMarketClose() {
-            const adminSettings = config.adminSettings || {};
-            adminSettings.marketClosed = !adminSettings.marketClosed;
-            config.adminSettings = adminSettings;
-            localStorage.setItem('traderConfig', JSON.stringify(config));
-            
-            const marketClosed = adminSettings.marketClosed;
-            document.getElementById('marketStatusDisplay').textContent = marketClosed ? 'CLOSED' : 'OPEN';
-            document.getElementById('marketStatusDisplay').classList.toggle('closed', marketClosed);
-            
-            // Update market display
-            updateMarketStatusDisplay();
-            
-            alert(`Market ${marketClosed ? 'CLOSED' : 'OPENED'}!`);
-        }
-        
-        function postMT5Prices() {
-            const postUrl = document.getElementById('postUrl').value;
-            const apiKey = document.getElementById('apiKey').value;
-            
-            if (!postUrl) {
-                alert("Please set POST URL first!");
-                return;
-            }
-            
-            // Prepare price data
-            const priceData = {
-                xau: parseFloat(document.getElementById('xau-price').innerText.replace(/[^0-9.-]+/g, "")) || 0,
-                btc: parseFloat(document.getElementById('btc-price').innerText.replace(/[^0-9.-]+/g, "")) || 0,
-                us30: parseFloat(document.getElementById('us30-price').innerText.replace(/[^0-9.-]+/g, "")) || 0,
-                nas100: parseFloat(document.getElementById('nas100-price').innerText.replace(/[^0-9.-]+/g, "")) || 0,
-                timestamp: new Date().toISOString()
-            };
-            
-            // Show sending status
-            alert(`Sending prices to MT5...\n\nURL: ${postUrl}\n\nThis is a demo. In production, this would make an actual POST request.`);
-            
-            // Simulate POST request
-            setTimeout(() => {
-                alert("Prices sent to MT5 successfully! (Demo mode)");
-            }, 1500);
-        }
-        
-        function saveManualPrices() {
-            const xauPrice = document.getElementById('adminXauPrice').value;
-            const btcPrice = document.getElementById('adminBtcPrice').value;
-            const us30Price = document.getElementById('adminUs30Price').value;
-            const nas100Price = document.getElementById('adminNas100Price').value;
-            
-            if (!xauPrice || !btcPrice || !us30Price || !nas100Price) {
-                alert("Please fill all price fields!");
-                return;
-            }
-            
-            const adminSettings = config.adminSettings || {};
-            adminSettings.manualPrices = {
-                xau: xauPrice,
-                btc: btcPrice,
-                us30: us30Price,
-                nas100: nas100Price
-            };
-            
-            config.adminSettings = adminSettings;
-            localStorage.setItem('traderConfig', JSON.stringify(config));
-            
-            alert("Manual prices saved! Click 'Update Prices' to apply.");
-        }
-        
-        function updateMarketStatusDisplay() {
-            const marketClosed = config.adminSettings?.marketClosed || false;
-            const marketStatusDot = document.getElementById('marketStatusDot');
-            const marketStatusText = document.getElementById('marketStatusText');
-            
-            if (marketClosed) {
-                marketStatusDot.classList.add('market-closed');
-                marketStatusText.textContent = 'Market CLOSED - TradingView';
-                
-                // Update price cards
-                const priceCards = document.querySelectorAll('.price-card');
-                priceCards.forEach(card => {
-                    if (!card.id.includes('btc')) { // BTC tetap normal
-                        card.classList.add('market-closed');
-                        const badge = document.createElement('span');
-                        badge.className = 'market-closed-badge';
-                        badge.textContent = 'CLOSED';
-                        card.appendChild(badge);
-                    }
-                });
-            } else {
-                marketStatusDot.classList.remove('market-closed');
-                marketStatusText.textContent = 'Live Market - TradingView';
-                
-                // Remove market closed styling
-                const priceCards = document.querySelectorAll('.price-card');
-                priceCards.forEach(card => {
-                    card.classList.remove('market-closed');
-                    const badge = card.querySelector('.market-closed-badge');
-                    if (badge) {
-                        badge.remove();
-                    }
-                });
-            }
-        }
-
         // ========== TUTORIAL FUNCTIONS ==========
         function nextTutorialStep() {
             if (tutorialStep < totalTutorialSteps) {
@@ -5237,15 +4683,16 @@
                     loading.style.display = 'inline';
                 });
                 
-                // Check if market is closed
-                const marketClosed = config.adminSettings?.marketClosed || false;
+                // Check if market is closed from admin config
+                const adminConfig = JSON.parse(localStorage.getItem('adminConfig')) || {};
+                const marketClosed = adminConfig.marketClosed || false;
                 
-                // Check for manual prices first
-                const manualPrices = config.adminSettings?.manualPrices;
+                // Check for manual prices from admin config
+                const manualPrices = adminConfig.manualPrices || {};
                 let demoPrices;
                 
                 if (manualPrices && Object.keys(manualPrices).length > 0) {
-                    // Use manual prices
+                    // Use manual prices from admin
                     demoPrices = {
                         'xau-price': manualPrices.xau || '4533.99',
                         'btc-price': manualPrices.btc || '87532.99',
@@ -5292,7 +4739,7 @@
                 });
                 
                 // Update market status display
-                updateMarketStatusDisplay();
+                updateMarketStatusDisplay(marketClosed);
                 
                 // Hide loading spinners
                 setTimeout(() => {
@@ -5308,7 +4755,8 @@
                 console.log("Market refresh error:", err);
                 
                 // Set fallback prices if API fails
-                const marketClosed = config.adminSettings?.marketClosed || false;
+                const adminConfig = JSON.parse(localStorage.getItem('adminConfig')) || {};
+                const marketClosed = adminConfig.marketClosed || false;
                 const fallbackPrices = {
                     'xau-price': marketClosed ? 'CLOSED' : '4,533.99',
                     'btc-price': '87,532.99',
@@ -5325,7 +4773,7 @@
                 });
                 
                 // Update market status display
-                updateMarketStatusDisplay();
+                updateMarketStatusDisplay(marketClosed);
                 
                 // Hide loading spinners
                 document.querySelectorAll('.spinner').forEach(spinner => {
@@ -5337,24 +4785,38 @@
             }
         }
         
-        function updatePriceDisplay(elementId, price) {
-            const el = document.getElementById(elementId);
-            if (el) {
-                const oldPrice = parseFloat(el.innerText.replace(/[^0-9.-]+/g, "")) || price;
-                el.innerHTML = price.toFixed(2);
+        function updateMarketStatusDisplay(marketClosed) {
+            const marketStatusDot = document.getElementById('marketStatusDot');
+            const marketStatusText = document.getElementById('marketStatusText');
+            
+            if (marketClosed) {
+                marketStatusDot.classList.add('market-closed');
+                marketStatusText.textContent = 'Market CLOSED - TradingView';
                 
-                // Update color
-                if (price > oldPrice) {
-                    el.className = "up";
-                    el.classList.add('price-up');
-                    setTimeout(() => el.classList.remove('price-up'), 500);
-                } else if (price < oldPrice) {
-                    el.className = "down";
-                    el.classList.add('price-down');
-                    setTimeout(() => el.classList.remove('price-down'), 500);
-                }
+                // Update price cards
+                const priceCards = document.querySelectorAll('.price-card');
+                priceCards.forEach(card => {
+                    if (!card.id.includes('btc')) { // BTC tetap normal
+                        card.classList.add('market-closed');
+                        const badge = document.createElement('span');
+                        badge.className = 'market-closed-badge';
+                        badge.textContent = 'CLOSED';
+                        card.appendChild(badge);
+                    }
+                });
+            } else {
+                marketStatusDot.classList.remove('market-closed');
+                marketStatusText.textContent = 'Live Market - TradingView';
                 
-                el.oldPrice = price;
+                // Remove market closed styling
+                const priceCards = document.querySelectorAll('.price-card');
+                priceCards.forEach(card => {
+                    card.classList.remove('market-closed');
+                    const badge = card.querySelector('.market-closed-badge');
+                    if (badge) {
+                        badge.remove();
+                    }
+                });
             }
         }
 
