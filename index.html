@@ -18,6 +18,9 @@
     --orange:#e67e22;
     --yellow:#f1c40f;
     --idr-green:#27ae60;
+    --fomo-color:#e74c3c;
+    --santai-color:#2ecc71;
+    --ragu-color:#f39c12;
 }
 
 * {
@@ -37,6 +40,85 @@ body {
     background-attachment: fixed;
     transition: background-image 0.5s ease;
     min-height: 100vh;
+}
+
+/* Notification Toast */
+.notification-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 350px;
+    display: none;
+}
+
+.notification {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    border-left: 5px solid var(--green);
+    animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+    transform: translateX(400px);
+}
+
+.notification.success {
+    border-left-color: var(--green);
+}
+
+.notification.warning {
+    border-left-color: var(--orange);
+}
+
+.notification.error {
+    border-left-color: var(--red);
+}
+
+.notification.info {
+    border-left-color: var(--blue);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(400px);
+    }
+}
+
+.notification-icon {
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: 5px;
+}
+
+.notification-message {
+    color: var(--gray);
+    font-size: 0.9rem;
 }
 
 /* FIX: Background TANPA overlay atau blur untuk wallpaper terlihat jelas */
@@ -281,6 +363,68 @@ input:focus, select:focus, textarea:focus {
     box-shadow: 0 0 0 3px rgba(74, 100, 145, 0.1);
 }
 
+/* Trading Feeling Option Styling */
+.feeling-option {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.feeling-btn {
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-direction: column;
+}
+
+.feeling-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.feeling-fomo {
+    border-color: var(--fomo-color);
+    color: var(--fomo-color);
+}
+
+.feeling-fomo.selected {
+    background: rgba(231, 76, 60, 0.1);
+    border-color: var(--fomo-color);
+    color: var(--fomo-color);
+}
+
+.feeling-santai {
+    border-color: var(--santai-color);
+    color: var(--santai-color);
+}
+
+.feeling-santai.selected {
+    background: rgba(46, 204, 113, 0.1);
+    border-color: var(--santai-color);
+    color: var(--santai-color);
+}
+
+.feeling-ragu {
+    border-color: var(--ragu-color);
+    color: var(--ragu-color);
+}
+
+.feeling-ragu.selected {
+    background: rgba(243, 156, 18, 0.1);
+    border-color: var(--ragu-color);
+    color: var(--ragu-color);
+}
+
 /* Profit/Loss Option Styling */
 .profit-loss-option {
     display: grid;
@@ -381,6 +525,67 @@ input:focus, select:focus, textarea:focus {
 
 .btn-danger:hover {
     background: #c4412e;
+}
+
+/* Chart Upload */
+.chart-upload-container {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #f8f9fa;
+    margin-bottom: 15px;
+}
+
+.chart-upload-container:hover {
+    border-color: var(--blue);
+    background: #f1f2f3;
+}
+
+.chart-upload-container.dragover {
+    border-color: var(--green);
+    background: var(--soft-green);
+}
+
+.upload-icon {
+    font-size: 2rem;
+    color: var(--gray);
+    margin-bottom: 10px;
+}
+
+.chart-upload-text {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.chart-preview {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: none;
+}
+
+.chart-preview.show {
+    display: block;
+}
+
+.remove-chart-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: none;
+}
+
+.remove-chart-btn.show {
+    display: inline-block;
 }
 
 /* Kalender PnL */
@@ -707,6 +912,33 @@ input:focus, select:focus, textarea:focus {
     color: var(--idr-green);
 }
 
+/* Feeling Badge */
+.feeling-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.feeling-fomo-badge {
+    background: rgba(231, 76, 60, 0.1);
+    color: var(--fomo-color);
+}
+
+.feeling-santai-badge {
+    background: rgba(46, 204, 113, 0.1);
+    color: var(--santai-color);
+}
+
+.feeling-ragu-badge {
+    background: rgba(243, 156, 18, 0.1);
+    color: var(--ragu-color);
+}
+
 /* Currency Conversion Settings */
 .conversion-settings {
     background: rgba(255, 243, 205, 0.3);
@@ -801,6 +1033,10 @@ input:checked + .toggle-slider:before {
     .profit-loss-option {
         grid-template-columns: 1fr;
     }
+    
+    .feeling-option {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Footer */
@@ -850,9 +1086,53 @@ input:checked + .toggle-slider:before {
     margin-top: 5px;
     font-weight: 500;
 }
+
+/* Chart in Day Detail */
+.chart-preview-modal {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    margin: 10px 0;
+    display: block;
+}
+
+.no-chart {
+    text-align: center;
+    color: var(--gray);
+    font-style: italic;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* Feeling Stats */
+.feeling-stats {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.feeling-stat-item {
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+
+.feeling-stat-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 5px 0;
+}
 </style>
 </head>
 <body>
+
+<!-- Notification Toast Container -->
+<div class="notification-toast" id="notificationToast"></div>
 
 <!-- Modal Update Modal dengan info currency -->
 <div id="capitalModal" class="modal">
@@ -964,6 +1244,19 @@ input:checked + .toggle-slider:before {
     </div>
 </div>
 
+<!-- Modal View Chart -->
+<div id="chartModal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h3 class="modal-title">📊 Chart Trading</h3>
+            <button class="close-btn" onclick="closeChartModal()">&times;</button>
+        </div>
+        <div id="chartModalContent">
+            <!-- Konten chart akan diisi -->
+        </div>
+    </div>
+</div>
+
 <div class="header-section">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h1 class="header-title">💰 Trading Journal - Multi Currency</h1>
@@ -1055,6 +1348,26 @@ input:checked + .toggle-slider:before {
                 </select>
             </div>
             
+            <!-- TRADING FEELING OPTION -->
+            <div class="form-group">
+                <label>Rasa Trading Hari Ini</label>
+                <div class="feeling-option">
+                    <div class="feeling-btn feeling-fomo" id="fomoBtn" onclick="selectFeeling('fomo')">
+                        <span>🔥</span>
+                        <span>FOMO</span>
+                    </div>
+                    <div class="feeling-btn feeling-santai" id="santaiBtn" onclick="selectFeeling('santai')">
+                        <span>😌</span>
+                        <span>Santai</span>
+                    </div>
+                    <div class="feeling-btn feeling-ragu" id="raguBtn" onclick="selectFeeling('ragu')">
+                        <span>🤔</span>
+                        <span>Ragu</span>
+                    </div>
+                </div>
+                <input type="hidden" id="feelingType" value="santai">
+            </div>
+            
             <!-- PROFIT/LOSS OPTION -->
             <div class="profit-loss-option">
                 <div class="profit-loss-btn profit-btn" id="profitBtn" onclick="selectProfitLoss('profit')">
@@ -1085,6 +1398,21 @@ input:checked + .toggle-slider:before {
             <div class="form-group">
                 <label>Profit/Loss dalam <span id="displayCurrencyLabel">USD</span></label>
                 <input type="text" id="profitDisplay" placeholder="Auto calculate" readonly>
+            </div>
+            
+            <!-- Chart Upload -->
+            <div class="form-group">
+                <label>Upload Chart Screenshot (Opsional)</label>
+                <div class="chart-upload-container" id="chartUploadContainer" onclick="document.getElementById('chartFile').click()">
+                    <div class="upload-icon">📊</div>
+                    <div class="chart-upload-text">
+                        Klik untuk upload chart<br>
+                        <small>Drag & drop juga bisa</small>
+                    </div>
+                    <input type="file" id="chartFile" accept="image/*" style="display: none;" onchange="handleChartUpload(event)">
+                    <img id="chartPreview" class="chart-preview" alt="Chart Preview">
+                    <button type="button" class="remove-chart-btn" id="removeChartBtn" onclick="removeChart()">Hapus Chart</button>
+                </div>
             </div>
             
             <div class="form-group">
@@ -1126,6 +1454,12 @@ input:checked + .toggle-slider:before {
     <!-- Statistics -->
     <div class="stats-card">
         <h2>📊 Statistik Performa</h2>
+        
+        <!-- Feeling Stats -->
+        <div class="feeling-stats" id="feelingStats">
+            <!-- Feeling stats akan diisi JavaScript -->
+        </div>
+        
         <div class="stats-grid">
             <div class="stat-item">
                 <div class="stat-label">Profit Terbesar</div>
@@ -1184,7 +1518,7 @@ let accounts = {
     "usd-account": {
         id: "usd-account",
         name: "USD Account",
-        type: "usd", // 'usd', 'cent', or 'idr'
+        type: "usd",
         capital: 1000,
         trades: [],
         convertToIdr: false,
@@ -1196,9 +1530,12 @@ let currentAccountId = "usd-account";
 let currentMonth = new Date();
 let displayInIdr = false;
 let exchangeRates = {
-    USD_IDR: 15000, // 1 USD = 15,000 IDR
-    CENT_USD: 100   // 100 CENT = 1 USD
+    USD_IDR: 15000,
+    CENT_USD: 100
 };
+
+// Chart upload variables
+let chartDataUrl = null;
 
 // Wallpaper settings
 let currentWallpaper = localStorage.getItem('tradingWallpaper') || 'default';
@@ -1220,6 +1557,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('newAccountType').addEventListener('change', function() {
         updateCurrencyInfo();
     });
+    
+    // Setup chart upload drag and drop
+    setupChartUpload();
+    
+    // Initialize feeling selection
+    selectFeeling('santai');
+    selectProfitLoss('profit');
 });
 
 // Load from localStorage
@@ -1261,6 +1605,172 @@ function setupEventListeners() {
     
     // Initialize conversion toggle
     document.getElementById('displayInIdr').checked = displayInIdr;
+}
+
+// Setup chart upload with drag and drop
+function setupChartUpload() {
+    const uploadContainer = document.getElementById('chartUploadContainer');
+    
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadContainer.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    // Highlight drop zone when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadContainer.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadContainer.addEventListener(eventName, unhighlight, false);
+    });
+    
+    // Handle dropped files
+    uploadContainer.addEventListener('drop', handleDrop, false);
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    function highlight() {
+        uploadContainer.classList.add('dragover');
+    }
+    
+    function unhighlight() {
+        uploadContainer.classList.remove('dragover');
+    }
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+            handleChartFile(files[0]);
+        }
+    }
+}
+
+// Handle chart file upload
+function handleChartUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        handleChartFile(file);
+    }
+}
+
+function handleChartFile(file) {
+    // Check if file is an image
+    if (!file.type.match('image.*')) {
+        showNotification('error', 'File harus berupa gambar!');
+        return;
+    }
+    
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        showNotification('error', 'Ukuran file maksimal 5MB!');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        chartDataUrl = e.target.result;
+        document.getElementById('chartPreview').src = chartDataUrl;
+        document.getElementById('chartPreview').classList.add('show');
+        document.getElementById('removeChartBtn').classList.add('show');
+        
+        showNotification('success', 'Chart berhasil diupload!');
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeChart() {
+    chartDataUrl = null;
+    document.getElementById('chartPreview').src = '';
+    document.getElementById('chartPreview').classList.remove('show');
+    document.getElementById('removeChartBtn').classList.remove('show');
+    document.getElementById('chartFile').value = '';
+}
+
+// Show notification toast
+function showNotification(type, message, title = '') {
+    const toastContainer = document.getElementById('notificationToast');
+    
+    let icon = '💡';
+    let defaultTitle = 'Info';
+    
+    switch(type) {
+        case 'success':
+            icon = '✅';
+            defaultTitle = 'Sukses';
+            break;
+        case 'error':
+            icon = '❌';
+            defaultTitle = 'Error';
+            break;
+        case 'warning':
+            icon = '⚠️';
+            defaultTitle = 'Peringatan';
+            break;
+        case 'info':
+            icon = '💡';
+            defaultTitle = 'Info';
+            break;
+    }
+    
+    const notificationId = 'notification-' + Date.now();
+    const notificationHTML = `
+        <div class="notification ${type}" id="${notificationId}">
+            <div style="display: flex; align-items: flex-start;">
+                <div class="notification-icon">${icon}</div>
+                <div class="notification-content">
+                    <div class="notification-title">${title || defaultTitle}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    toastContainer.innerHTML = notificationHTML + toastContainer.innerHTML;
+    toastContainer.style.display = 'block';
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        const notification = document.getElementById(notificationId);
+        if (notification) {
+            notification.remove();
+        }
+        
+        // Hide container if no notifications
+        if (toastContainer.children.length === 0) {
+            toastContainer.style.display = 'none';
+        }
+    }, 3000);
+}
+
+// Select trading feeling
+function selectFeeling(type) {
+    const fomoBtn = document.getElementById('fomoBtn');
+    const santaiBtn = document.getElementById('santaiBtn');
+    const raguBtn = document.getElementById('raguBtn');
+    
+    // Reset all buttons
+    fomoBtn.classList.remove('selected');
+    santaiBtn.classList.remove('selected');
+    raguBtn.classList.remove('selected');
+    
+    // Set selected button
+    if (type === 'fomo') {
+        fomoBtn.classList.add('selected');
+        document.getElementById('feelingType').value = 'fomo';
+    } else if (type === 'santai') {
+        santaiBtn.classList.add('selected');
+        document.getElementById('feelingType').value = 'santai';
+    } else {
+        raguBtn.classList.add('selected');
+        document.getElementById('feelingType').value = 'ragu';
+    }
 }
 
 // Select Profit or Loss
@@ -1504,7 +2014,7 @@ function updateInitialCapital() {
     const capital = parseFloat(capitalInput.value);
     
     if (isNaN(capital) || capital < 0) {
-        alert('Masukkan jumlah modal yang valid');
+        showNotification('error', 'Masukkan jumlah modal yang valid');
         return;
     }
     
@@ -1514,24 +2024,21 @@ function updateInitialCapital() {
     closeCapitalModal();
     saveData();
     
-    // Show confirmation message
+    // Show notification
     let message = '';
     if (currentAccount.type === 'cent') {
         const usdValue = capital / exchangeRates.CENT_USD;
         const idrValue = usdValue * exchangeRates.USD_IDR;
-        message = `Modal berhasil diupdate menjadi ${capital.toLocaleString('id-ID')} CENT\n`;
-        message += `($${usdValue.toFixed(2)} atau ${formatIDR(idrValue)})`;
+        message = `Modal: ${capital.toLocaleString('id-ID')} CENT ($${usdValue.toFixed(2)})`;
     } else if (currentAccount.type === 'idr') {
         const usdValue = capital / exchangeRates.USD_IDR;
-        message = `Modal berhasil diupdate menjadi ${formatIDR(capital)}\n`;
-        message += `($${usdValue.toFixed(2)} USD)`;
+        message = `Modal: ${formatIDR(capital)}`;
     } else {
         const idrValue = capital * exchangeRates.USD_IDR;
-        message = `Modal berhasil diupdate menjadi $${capital.toFixed(2)}\n`;
-        message += `(${formatIDR(idrValue)})`;
+        message = `Modal: $${capital.toFixed(2)}`;
     }
     
-    alert(message);
+    showNotification('success', `Modal berhasil diupdate!\n${message}`);
 }
 
 function showAddAccountModal() {
@@ -1557,12 +2064,19 @@ function addNewAccount() {
     const capital = parseFloat(capitalInput.value);
     
     if (!name) {
-        alert('Masukkan nama account');
+        showNotification('error', 'Masukkan nama account');
         return;
     }
     
     if (isNaN(capital) || capital < 0) {
-        alert('Masukkan jumlah modal yang valid');
+        showNotification('error', 'Masukkan jumlah modal yang valid');
+        return;
+    }
+    
+    // Check if account name already exists
+    const existingAccount = Object.values(accounts).find(acc => acc.name === name);
+    if (existingAccount) {
+        showNotification('error', 'Nama account sudah digunakan');
         return;
     }
     
@@ -1574,7 +2088,7 @@ function addNewAccount() {
         id: accountId,
         name: name,
         type: type,
-        capital: capital, // Store as-is based on type
+        capital: capital,
         trades: [],
         convertToIdr: type === 'cent' ? convertToIdr : false,
         createdAt: new Date().toISOString()
@@ -1594,24 +2108,11 @@ function addNewAccount() {
     renderAccountTabs();
     renderUI();
     
-    // Show confirmation
-    let confirmMsg = `Account "${name}" berhasil ditambahkan!\n`;
-    if (type === 'cent') {
-        const usdValue = capital / exchangeRates.CENT_USD;
-        const idrValue = usdValue * exchangeRates.USD_IDR;
-        confirmMsg += `Modal: ${capital.toLocaleString('id-ID')} CENT ($${usdValue.toFixed(2)} atau ${formatIDR(idrValue)})`;
-    } else if (type === 'idr') {
-        const usdValue = capital / exchangeRates.USD_IDR;
-        confirmMsg += `Modal: ${formatIDR(capital)} ($${usdValue.toFixed(2)} USD)`;
-    } else {
-        const idrValue = capital * exchangeRates.USD_IDR;
-        confirmMsg += `Modal: $${capital.toFixed(2)} (${formatIDR(idrValue)})`;
-    }
-    
-    alert(confirmMsg);
+    // Show notification
+    showNotification('success', `Account "${name}" berhasil ditambahkan!`);
 }
 
-// Wallpaper functions - SIMPLE VERSION
+// Wallpaper functions
 function showWallpaperModal() {
     document.getElementById('wallpaperModal').style.display = 'flex';
 }
@@ -1647,6 +2148,7 @@ function setWallpaper(type) {
     currentWallpaper = type;
     localStorage.setItem('tradingWallpaper', type);
     closeWallpaperModal();
+    showNotification('success', 'Background berhasil diganti!');
 }
 
 function applyWallpaper(type) {
@@ -1659,6 +2161,7 @@ function clearWallpaper() {
     currentWallpaper = 'default';
     localStorage.setItem('tradingWallpaper', 'default');
     closeWallpaperModal();
+    showNotification('success', 'Background direset ke default!');
 }
 
 // Handle wallpaper upload
@@ -1672,6 +2175,7 @@ document.getElementById('wallpaperUpload').addEventListener('change', function(e
             localStorage.setItem('tradingWallpaper', 'custom');
             localStorage.setItem('customWallpaper', e.target.result);
             closeWallpaperModal();
+            showNotification('success', 'Custom background berhasil diupload!');
         };
         reader.readAsDataURL(file);
     }
@@ -1703,6 +2207,7 @@ function toggleDisplayCurrency() {
     saveData();
     updateProfitDisplay();
     renderUI();
+    showNotification('info', `Tampilan mata uang diubah ke ${displayInIdr ? 'IDR' : 'USD'}`);
 }
 
 // Toggle currency display button
@@ -1711,7 +2216,7 @@ function toggleCurrencyDisplay() {
     const currentAccount = accounts[currentAccountId];
     
     if (currentAccount.type === 'idr') {
-        alert('Account IDR hanya menampilkan dalam IDR');
+        showNotification('info', 'Account IDR hanya menampilkan dalam IDR');
         return;
     }
     
@@ -1722,6 +2227,7 @@ function toggleCurrencyDisplay() {
     saveData();
     updateProfitDisplay();
     renderUI();
+    showNotification('info', `Sekarang menampilkan dalam ${displayInIdr ? 'IDR' : 'USD'}`);
 }
 
 // Add new trade
@@ -1731,10 +2237,16 @@ function addTrade() {
     // Get form values
     const profitInput = document.getElementById('profitAmount');
     const profitLossType = document.getElementById('profitLossType').value;
+    const feeling = document.getElementById('feelingType').value;
     const amount = parseFloat(profitInput.value);
     
     if (isNaN(amount) || amount <= 0) {
-        alert('Masukkan jumlah yang valid (lebih dari 0)');
+        showNotification('error', 'Masukkan jumlah yang valid (lebih dari 0)');
+        return;
+    }
+    
+    if (!document.getElementById('pair').value.trim()) {
+        showNotification('error', 'Masukkan pair trading');
         return;
     }
     
@@ -1772,13 +2284,15 @@ function addTrade() {
         date: document.getElementById('tradeDate').value,
         pair: document.getElementById('pair').value.trim().toUpperCase(),
         direction: document.getElementById('direction').value,
-        profitOriginal: parseFloat(originalAmount.toFixed(2)), // Profit dalam currency asli (+ untuk profit, - untuk loss)
-        profitUSD: parseFloat(profitUSD.toFixed(2)), // Profit dalam USD (+ untuk profit, - untuk loss)
-        profitIDR: parseFloat(profitIDR.toFixed(2)), // Profit dalam IDR (+ untuk profit, - untuk loss)
+        feeling: feeling,
+        profitOriginal: parseFloat(originalAmount.toFixed(2)),
+        profitUSD: parseFloat(profitUSD.toFixed(2)),
+        profitIDR: parseFloat(profitIDR.toFixed(2)),
         currency: currentAccount.type === 'cent' ? 'CENT' : 
                  currentAccount.type === 'idr' ? 'IDR' : 'USD',
         accountType: currentAccount.type,
-        type: profitLossType, // 'profit' or 'loss'
+        type: profitLossType,
+        chartData: chartDataUrl,
         notes: document.getElementById('notes').value.trim()
     };
     
@@ -1805,13 +2319,11 @@ function addTrade() {
     document.getElementById('tradeForm').reset();
     document.getElementById('tradeDate').valueAsDate = new Date();
     document.getElementById('profitDisplay').value = '';
+    removeChart();
     
-    // Reset profit/loss selection
-    document.getElementById('profitBtn').classList.add('selected');
-    document.getElementById('lossBtn').classList.remove('selected');
-    document.getElementById('profitLossType').value = 'profit';
-    document.getElementById('amountLabel').textContent = 'Jumlah Profit';
-    document.getElementById('profitAmount').placeholder = 'Contoh: 280';
+    // Reset selections
+    selectFeeling('santai');
+    selectProfitLoss('profit');
     
     // Show notification
     const profitText = isLoss ? 'LOSS' : 'PROFIT';
@@ -1819,7 +2331,13 @@ function addTrade() {
         formatIDR(trade.profitIDR) : `$${Math.abs(trade.profitUSD).toFixed(2)}`;
     const sign = isLoss ? '-' : '+';
     
-    alert(`✅ Trading ${profitText} disimpan!\n\n💰 Amount: ${sign}${profitDisplay}\n📊 % dari modal: ${sign}${Math.abs(trade.percent)}%\n📅 Tanggal: ${formatDate(trade.date)}`);
+    showNotification('success', 
+        `Trading ${profitText} disimpan!\n` +
+        `💰 Amount: ${sign}${profitDisplay}\n` +
+        `📊 % dari modal: ${sign}${Math.abs(trade.percent)}%\n` +
+        `📅 Tanggal: ${formatDate(trade.date)}`,
+        '✅ Trading Disimpan'
+    );
 }
 
 // Delete trade
@@ -1828,6 +2346,7 @@ function deleteTrade(id) {
         const currentAccount = accounts[currentAccountId];
         currentAccount.trades = currentAccount.trades.filter(trade => trade.id !== id);
         saveData();
+        showNotification('success', 'Trading berhasil dihapus!');
     }
 }
 
@@ -2095,6 +2614,20 @@ function showDayDetail(dateKey) {
                 trade.currency === 'IDR' ? formatIDR(Math.abs(trade.profitOriginal)) :
                 `$${Math.abs(trade.profitOriginal).toFixed(2)}`;
             
+            // Determine feeling badge
+            let feelingBadge = '';
+            let feelingClass = '';
+            if (trade.feeling === 'fomo') {
+                feelingBadge = '🔥 FOMO';
+                feelingClass = 'feeling-fomo-badge';
+            } else if (trade.feeling === 'santai') {
+                feelingBadge = '😌 Santai';
+                feelingClass = 'feeling-santai-badge';
+            } else {
+                feelingBadge = '🤔 Ragu';
+                feelingClass = 'feeling-ragu-badge';
+            }
+            
             content += `
                 <div style="border: 1px solid #eee; border-radius: 8px; padding: 10px; margin-bottom: 10px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
@@ -2110,15 +2643,24 @@ function showDayDetail(dateKey) {
                             ${trade.profitUSD >= 0 ? '+' : '-'}${displayAmount}
                         </div>
                     </div>
-                    <div style="font-size: 0.9rem; color: var(--gray);">
-                        ${originalAmount} • ${trade.profitUSD >= 0 ? '+' : '-'}${Math.abs(trade.percent)}% dari modal
+                    <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 5px;">
+                        <span class="feeling-badge ${feelingClass}">
+                            ${feelingBadge}
+                        </span>
                         <span class="account-indicator ${trade.accountType === 'cent' ? 'cent-indicator' : 
                             trade.accountType === 'idr' ? 'idr-indicator' : 'usd-indicator'}" style="margin-left: 5px;">
                             ${trade.accountType === 'cent' ? 'CENT' : 
                              trade.accountType === 'idr' ? 'IDR' : 'USD'}
                         </span>
                     </div>
-                    ${trade.notes ? `<div style="font-size: 0.9rem; margin-top: 5px; font-style: italic;">"${trade.notes}"</div>` : ''}
+                    ${trade.notes ? `<div style="font-size: 0.9rem; margin-bottom: 5px; font-style: italic;">"${trade.notes}"</div>` : ''}
+                    ${trade.chartData ? `
+                        <div style="margin-top: 10px;">
+                            <button class="btn" onclick="viewChart('${trade.id}')" style="padding: 5px 10px; font-size: 0.8rem; width: auto;">
+                                📊 Lihat Chart
+                            </button>
+                        </div>
+                    ` : ''}
                 </div>
             `;
         });
@@ -2133,16 +2675,110 @@ function closeDayDetailModal() {
     document.getElementById('dayDetailModal').style.display = 'none';
 }
 
+// View chart modal
+function viewChart(tradeId) {
+    const currentAccount = accounts[currentAccountId];
+    const trade = currentAccount.trades.find(t => t.id == tradeId);
+    
+    if (!trade || !trade.chartData) {
+        showNotification('error', 'Chart tidak tersedia');
+        return;
+    }
+    
+    document.getElementById('chartModalContent').innerHTML = `
+        <div style="text-align: center;">
+            <img src="${trade.chartData}" class="chart-preview-modal" alt="Chart Trading">
+            <div style="margin-top: 15px; color: var(--gray); font-size: 0.9rem;">
+                Chart untuk ${trade.pair} ${trade.direction} pada ${formatDate(trade.date)}
+            </div>
+            <div style="margin-top: 10px;">
+                <button class="btn" onclick="closeChartModal()" style="padding: 8px 20px; width: auto;">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('chartModal').style.display = 'flex';
+}
+
+function closeChartModal() {
+    document.getElementById('chartModal').style.display = 'none';
+}
+
 // Change month
 function changeMonth(step) {
     currentMonth.setMonth(currentMonth.getMonth() + step);
     renderCalendar();
 }
 
+// Render feeling statistics
+function renderFeelingStats() {
+    const currentAccount = accounts[currentAccountId];
+    const accountTrades = currentAccount.trades || [];
+    
+    if (accountTrades.length === 0) {
+        document.getElementById('feelingStats').innerHTML = `
+            <div class="feeling-stat-item">
+                <div style="color: var(--fomo-color);">🔥 FOMO</div>
+                <div class="feeling-stat-value">0</div>
+                <div style="font-size: 0.8rem; color: var(--gray);">trading</div>
+            </div>
+            <div class="feeling-stat-item">
+                <div style="color: var(--santai-color);">😌 Santai</div>
+                <div class="feeling-stat-value">0</div>
+                <div style="font-size: 0.8rem; color: var(--gray);">trading</div>
+            </div>
+            <div class="feeling-stat-item">
+                <div style="color: var(--ragu-color);">🤔 Ragu</div>
+                <div class="feeling-stat-value">0</div>
+                <div style="font-size: 0.8rem; color: var(--gray);">trading</div>
+            </div>
+        `;
+        return;
+    }
+    
+    // Count feeling stats
+    const fomoCount = accountTrades.filter(t => t.feeling === 'fomo').length;
+    const santaiCount = accountTrades.filter(t => t.feeling === 'santai').length;
+    const raguCount = accountTrades.filter(t => t.feeling === 'ragu').length;
+    
+    // Calculate PnL by feeling
+    const fomoPnL = accountTrades.filter(t => t.feeling === 'fomo').reduce((sum, t) => sum + t.profitUSD, 0);
+    const santaiPnL = accountTrades.filter(t => t.feeling === 'santai').reduce((sum, t) => sum + t.profitUSD, 0);
+    const raguPnL = accountTrades.filter(t => t.feeling === 'ragu').reduce((sum, t) => sum + t.profitUSD, 0);
+    
+    document.getElementById('feelingStats').innerHTML = `
+        <div class="feeling-stat-item">
+            <div style="color: var(--fomo-color);">🔥 FOMO</div>
+            <div class="feeling-stat-value">${fomoCount}</div>
+            <div style="font-size: 0.8rem; color: ${fomoPnL >= 0 ? 'var(--green)' : 'var(--red)'}">
+                ${fomoPnL >= 0 ? '+' : ''}${displayInIdr ? formatIDR(fomoPnL * exchangeRates.USD_IDR) : `$${formatNumber(fomoPnL)}`}
+            </div>
+        </div>
+        <div class="feeling-stat-item">
+            <div style="color: var(--santai-color);">😌 Santai</div>
+            <div class="feeling-stat-value">${santaiCount}</div>
+            <div style="font-size: 0.8rem; color: ${santaiPnL >= 0 ? 'var(--green)' : 'var(--red)'}">
+                ${santaiPnL >= 0 ? '+' : ''}${displayInIdr ? formatIDR(santaiPnL * exchangeRates.USD_IDR) : `$${formatNumber(santaiPnL)}`}
+            </div>
+        </div>
+        <div class="feeling-stat-item">
+            <div style="color: var(--ragu-color);">🤔 Ragu</div>
+            <div class="feeling-stat-value">${raguCount}</div>
+            <div style="font-size: 0.8rem; color: ${raguPnL >= 0 ? 'var(--green)' : 'var(--red)'}">
+                ${raguPnL >= 0 ? '+' : ''}${displayInIdr ? formatIDR(raguPnL * exchangeRates.USD_IDR) : `$${formatNumber(raguPnL)}`}
+            </div>
+        </div>
+    `;
+}
+
 // Render statistics
 function renderStatistics() {
     const currentAccount = accounts[currentAccountId];
     const accountTrades = currentAccount.trades || [];
+    
+    renderFeelingStats();
     
     if (accountTrades.length === 0) {
         document.getElementById('statMaxProfit').textContent = displayInIdr || currentAccount.type === 'idr' ? 'IDR 0' : '$0.00';
@@ -2218,7 +2854,7 @@ function renderTradesList() {
                     <th>Tanggal</th>
                     <th>Pair</th>
                     <th>Direction</th>
-                    <th>Tipe</th>
+                    <th>Feeling</th>
                     <th>Profit/Loss</th>
                     <th>%</th>
                     <th>Aksi</th>
@@ -2230,8 +2866,25 @@ function renderTradesList() {
     accountTrades.forEach(trade => {
         const profitClass = trade.profitUSD > 0 ? 'trade-positive' : 'trade-negative';
         const directionClass = trade.direction === 'BUY' ? 'trade-direction-buy' : 'trade-direction-sell';
-        const typeClass = trade.type === 'profit' ? 'trade-positive' : 'trade-negative';
         const profitSign = trade.profitUSD >= 0 ? '+' : '-';
+        
+        // Determine feeling
+        let feelingEmoji = '';
+        let feelingColor = '';
+        switch(trade.feeling) {
+            case 'fomo':
+                feelingEmoji = '🔥';
+                feelingColor = 'var(--fomo-color)';
+                break;
+            case 'santai':
+                feelingEmoji = '😌';
+                feelingColor = 'var(--santai-color)';
+                break;
+            case 'ragu':
+                feelingEmoji = '🤔';
+                feelingColor = 'var(--ragu-color)';
+                break;
+        }
         
         // Determine display amount
         let displayAmount = '';
@@ -2241,34 +2894,25 @@ function renderTradesList() {
             displayAmount = `${profitSign}$${formatNumber(Math.abs(trade.profitUSD))}`;
         }
         
-        // Determine original amount display
-        let originalAmount = '';
-        if (trade.currency === 'CENT') {
-            originalAmount = `${Math.abs(trade.profitOriginal).toLocaleString('id-ID')} CENT`;
-        } else if (trade.currency === 'IDR') {
-            originalAmount = formatIDR(Math.abs(trade.profitOriginal));
-        } else {
-            originalAmount = `$${Math.abs(trade.profitOriginal).toFixed(2)}`;
-        }
+        // Chart indicator
+        const chartIndicator = trade.chartData ? ' 📊' : '';
         
         tableHTML += `
             <tr>
                 <td>${formatDate(trade.date)}</td>
-                <td>${trade.pair}</td>
+                <td>${trade.pair}${chartIndicator}</td>
                 <td class="${directionClass}">${trade.direction}</td>
-                <td class="${typeClass}">
-                    ${trade.type === 'profit' ? '📈 Profit' : '📉 Loss'}
+                <td style="color: ${feelingColor}">
+                    ${feelingEmoji} ${trade.feeling}
                 </td>
                 <td class="${profitClass}">
                     ${displayAmount}
-                    <div style="font-size: 0.8rem; color: var(--gray);">
-                        ${originalAmount}
-                    </div>
                 </td>
                 <td style="color: ${trade.profitUSD >= 0 ? 'var(--green)' : 'var(--red)'}">
                     ${profitSign}${Math.abs(trade.percent)}%
                 </td>
                 <td>
+                    ${trade.chartData ? `<button class="delete-btn" onclick="viewChart(${trade.id})" title="Lihat Chart" style="margin-right: 5px;">📊</button>` : ''}
                     <button class="delete-btn" onclick="deleteTrade(${trade.id})" title="Hapus">
                         🗑️
                     </button>
@@ -2303,10 +2947,11 @@ function formatDate(dateString) {
 }
 
 function formatNumber(num) {
-    if (Math.abs(num) >= 1000) {
-        return (Math.abs(num) / 1000).toFixed(1) + 'K';
+    const absNum = Math.abs(num);
+    if (absNum >= 1000) {
+        return (absNum / 1000).toFixed(1) + 'K';
     }
-    return Math.abs(num).toFixed(2);
+    return absNum.toFixed(2);
 }
 
 function formatIDR(amount) {
@@ -2340,8 +2985,10 @@ function exportData() {
     
     const link = document.createElement('a');
     link.setAttribute('href', dataUri);
-    link.setAttribute('download', `trading-accounts-${new Date().toISOString().slice(0,10)}.json`);
+    link.setAttribute('download', `trading-journal-${new Date().toISOString().slice(0,10)}.json`);
     link.click();
+    
+    showNotification('success', 'Data berhasil diekspor!', '📤 Ekspor Sukses');
 }
 
 function importData() {
@@ -2365,10 +3012,10 @@ function importData() {
                     saveData();
                     renderAccountTabs();
                     renderUI();
-                    alert('Data berhasil diimpor!');
+                    showNotification('success', 'Data berhasil diimpor!', '📥 Impor Sukses');
                 }
             } catch (error) {
-                alert('Gagal membaca file. Pastikan format JSON valid.');
+                showNotification('error', 'Gagal membaca file. Pastikan format JSON valid.', '❌ Error Impor');
             }
         };
         
@@ -2386,16 +3033,16 @@ function clearAllData() {
             accounts[accountId].trades = [];
             // Reset capital based on account type
             if (accountId.includes('cent')) {
-                accounts[accountId].capital = 1000; // 1000 CENT = $10
+                accounts[accountId].capital = 1000;
             } else if (accountId.includes('idr')) {
-                accounts[accountId].capital = 1000000; // 1 juta IDR
+                accounts[accountId].capital = 1000000;
             } else {
-                accounts[accountId].capital = 1000; // $1000
+                accounts[accountId].capital = 1000;
             }
         });
         
         saveData();
-        alert('Semua data trading telah dihapus! Modal direset');
+        showNotification('warning', 'Semua data trading telah dihapus! Modal direset', '🗑️ Data Dihapus');
     }
 }
 
@@ -2416,9 +3063,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </button>
     `;
     footer.appendChild(buttons);
-    
-    // Initialize profit/loss selection
-    selectProfitLoss('profit');
 });
 </script>
 </body>
