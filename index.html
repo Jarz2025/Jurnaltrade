@@ -628,15 +628,17 @@ input:focus, select:focus, textarea:focus {
     gap: 8px;
 }
 
+/* PERBAIKAN: Box Kalender dengan PnL yang lebih terlihat */
 .calendar-cell {
     border-radius: 12px;
-    padding: 12px 8px;
+    padding: 8px 4px;
     text-align: center;
     font-size: 0.95rem;
     min-height: 70px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     cursor: pointer;
     transition: all 0.3s;
     background: white;
@@ -651,14 +653,15 @@ input:focus, select:focus, textarea:focus {
     z-index: 1;
 }
 
+/* Background yang lebih kontras */
 .calendar-cell.positive {
-    background: linear-gradient(135deg, rgba(67, 233, 123, 0.15) 0%, rgba(56, 249, 215, 0.15) 100%);
-    border-color: rgba(67, 233, 123, 0.3);
+    background: linear-gradient(135deg, rgba(67, 233, 123, 0.25) 0%, rgba(56, 249, 215, 0.25) 100%);
+    border-color: rgba(67, 233, 123, 0.4);
 }
 
 .calendar-cell.negative {
-    background: linear-gradient(135deg, rgba(255, 154, 158, 0.15) 0%, rgba(254, 207, 239, 0.15) 100%);
-    border-color: rgba(255, 154, 158, 0.3);
+    background: linear-gradient(135deg, rgba(255, 154, 158, 0.25) 0%, rgba(254, 207, 239, 0.25) 100%);
+    border-color: rgba(255, 154, 158, 0.4);
 }
 
 .calendar-cell.neutral {
@@ -666,31 +669,70 @@ input:focus, select:focus, textarea:focus {
     border-color: rgba(0,0,0,0.1);
 }
 
+/* PERBAIKAN: Angka tanggal lebih besar dan jelas */
 .day-number {
     font-size: 1.1rem;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--dark-blue);
+    margin-bottom: 3px;
 }
 
+/* PERBAIKAN: Jumlah PnL lebih besar dan jelas */
 .pnl-amount {
     font-size: 0.85rem;
-    font-weight: 700;
-    margin-top: 5px;
-    padding: 4px 8px;
+    font-weight: 800;
+    margin: 2px 0;
+    padding: 4px 6px;
     border-radius: 8px;
-    background: rgba(255,255,255,0.8);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: inline-block;
+    min-width: 45px;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.5);
 }
 
-.calendar-cell.positive .pnl-amount { color: var(--green); }
-.calendar-cell.negative .pnl-amount { color: var(--red); }
+/* Warna lebih terang untuk PnL positif */
+.calendar-cell.positive .pnl-amount {
+    background: linear-gradient(135deg, rgba(67, 233, 123, 0.95) 0%, rgba(56, 249, 215, 0.95) 100%);
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    border: 1px solid rgba(67, 233, 123, 0.5);
+}
+
+/* Warna lebih terang untuk PnL negatif */
+.calendar-cell.negative .pnl-amount {
+    background: linear-gradient(135deg, rgba(255, 154, 158, 0.95) 0%, rgba(254, 207, 239, 0.95) 100%);
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255, 154, 158, 0.5);
+}
+
+.calendar-cell.positive .pnl-amount { color: white; }
+.calendar-cell.negative .pnl-amount { color: white; }
 
 .trade-count {
     font-size: 0.75rem;
-    color: var(--gray);
-    background: rgba(255,255,255,0.8);
+    font-weight: 700;
+    color: white;
+    background: rgba(74, 100, 145, 0.8);
     border-radius: 10px;
     padding: 2px 6px;
-    margin-top: 5px;
+    margin-top: 2px;
+    display: inline-block;
+    min-width: 30px;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+
+/* Animasi untuk emphasize */
+@keyframes highlightCell {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.calendar-cell.positive, .calendar-cell.negative {
+    animation: highlightCell 0.5s ease;
 }
 
 /* Statistics */
@@ -979,9 +1021,26 @@ input:focus, select:focus, textarea:focus {
         overflow-x: auto;
     }
     
+    /* Perbaikan untuk mobile */
     .calendar-cell {
         min-height: 60px;
-        padding: 8px 4px;
+        padding: 6px 3px;
+    }
+    
+    .day-number {
+        font-size: 1rem;
+    }
+    
+    .pnl-amount {
+        font-size: 0.75rem;
+        padding: 3px 4px;
+        min-width: 40px;
+    }
+    
+    .trade-count {
+        font-size: 0.7rem;
+        padding: 1px 4px;
+        min-width: 25px;
     }
 }
 
@@ -1744,12 +1803,40 @@ function renderCalendar() {
         
         if (dayData) {
             const profit = displayInIdr || acc.type === 'idr' ? dayData.profitIDR : dayData.profitUSD;
-            const sign = profit >= 0 ? '+' : '-';
-            const amount = displayInIdr || acc.type === 'idr' ? 
-                formatIDR(Math.abs(profit)) : `$${Math.abs(profit).toFixed(0)}`;
+            
+            // Format angka dengan lebih jelas
+            let amountDisplay;
+            if (displayInIdr || acc.type === 'idr') {
+                // Untuk IDR, tampilkan dengan format yang ringkas
+                const absProfit = Math.abs(profit);
+                if (absProfit >= 1000000) {
+                    amountDisplay = `${(absProfit/1000000).toFixed(1)}M`;
+                } else if (absProfit >= 1000) {
+                    amountDisplay = `${(absProfit/1000).toFixed(1)}K`;
+                } else {
+                    amountDisplay = absProfit.toFixed(0);
+                }
+                amountDisplay = `Rp${amountDisplay}`;
+            } else {
+                // Untuk USD, tampilkan dengan format yang ringkas
+                const absProfit = Math.abs(profit);
+                if (absProfit >= 1000) {
+                    amountDisplay = `${(absProfit/1000).toFixed(1)}K`;
+                } else if (absProfit >= 100) {
+                    amountDisplay = absProfit.toFixed(0);
+                } else if (absProfit >= 10) {
+                    amountDisplay = absProfit.toFixed(1);
+                } else {
+                    amountDisplay = absProfit.toFixed(2);
+                }
+                amountDisplay = `$${amountDisplay}`;
+            }
+            
+            const sign = profit >= 0 ? '+' : '−'; // Gunakan minus sign yang lebih jelas
             
             cellClass += profit > 0 ? ' positive' : profit < 0 ? ' negative' : ' neutral';
-            content += `<div class="pnl-amount">${sign}${amount}</div>`;
+            content += `<div class="pnl-amount">${sign}${amountDisplay}</div>`;
+            
             if (dayData.count > 0) {
                 content += `<div class="trade-count">${dayData.count}t</div>`;
             }
@@ -2388,4 +2475,4 @@ function clearAllData() {
 }
 </script>
 </body>
-</html>
+    </html>
